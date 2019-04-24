@@ -1,8 +1,10 @@
 import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin';
 import pkg from './package';
 
+const appName = 'PPlaner';
+
 export default {
-  mode: 'universal',
+  mode: 'spa',
 
   generate: {
     dir: 'target/dist',
@@ -12,7 +14,10 @@ export default {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    htmlAttrs: {
+      lang: 'fr',
+    },
+    title: appName,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -45,8 +50,14 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/vuetify',
+    { src: '@/plugins/vuetify' },
+    { src: '~/plugins/axios' },
+    { src: '~/plugins/vee-validate' },
   ],
+
+  router: {
+    middleware: ['auth'],
+  },
 
   /*
   ** Nuxt.js modules
@@ -54,7 +65,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '~/modules/keycloak'
+    '@nuxtjs/auth',
   ],
   /*
   ** Axios module configuration
@@ -67,16 +78,22 @@ export default {
   proxy: {
     '/api': {
       target: process.env.API_URL || 'http://localhost:8080',
-      credentials: true,
     },
   },
 
-  keycloak: {
-    url: 'http://keycloak.nas-parrot.synology.me/auth',
-    realm: 'master',
-    clientId: 'login-app',
-    sslRequired: 'external',
-    publicClient: true,
+  env: {
+    title: appName,
+  },
+
+  auth: {
+    rewriteRedirects: false,
+    strategies: {
+      local: {
+        endpoints: {
+          logout: false,
+        },
+      },
+    },
   },
 
   /*

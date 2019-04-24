@@ -47,9 +47,10 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark flat fixed>
+    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark fixed flat>
       <v-toolbar-title class="ml-0 pl-3" style="width: 300px">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"/>
+        <v-avatar size="36px" tile><img src="~/static/logo.png"></v-avatar>
         <nuxt-link class="hidden-sm-and-down pointer" tag="span" to="/" v-text="title"/>
       </v-toolbar-title>
       <v-text-field class="hidden-sm-and-down" flat hide-details label="Search" prepend-inner-icon="search" solo-inverted/>
@@ -60,8 +61,25 @@
       <v-btn icon>
         <v-icon>notifications</v-icon>
       </v-btn>
-      <v-btn icon>
-        <v-icon>person</v-icon>
+
+      <v-menu bottom lazy left offset-y transition="slide-y-transition" v-if="$auth.loggedIn">
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>person</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-tile to="/account">
+            <v-list-tile-title>Compte</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="logout">
+            <v-list-tile-title>Deconnexion</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <v-btn icon to="/login" v-else>
+        <v-icon>security</v-icon>
       </v-btn>
     </v-toolbar>
     <v-content>
@@ -71,23 +89,31 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
-
-@Component()
-export default class LayoutPage extends Vue {
-  drawer = null;
-  title = 'PPlanner';
-  items = [
-    { icon: 'event', text: 'Projets', to: '/projets' },
-    {
-      icon: 'keyboard_arrow_up',
-      'icon-alt': 'keyboard_arrow_down',
-      text: 'Référentiels',
-      model: true,
-      children: [
-        { icon: 'face', text: 'Utilisateurs', to: '/referentiels/utilisateurs' },
-      ],
+export default {
+  data: () => ({
+    isAuthenticated: false,
+    drawer: null,
+    title: process.env.title,
+    items: [
+      { icon: 'event', text: 'Projets', to: '/projets' },
+      {
+        icon: 'keyboard_arrow_up',
+        'icon-alt': 'keyboard_arrow_down',
+        text: 'Référentiels',
+        model: true,
+        children: [
+          { icon: 'face', text: 'Utilisateurs', to: '/referentiels/utilisateurs' },
+        ],
+      },
+    ],
+    profile: {},
+  }),
+  methods: {
+    async logout() {
+      await this.$auth.logout();
+      this.$router.push('/login');
     },
-  ];
-};
+  },
+}
+;
 </script>

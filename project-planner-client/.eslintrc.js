@@ -19,10 +19,12 @@ module.exports = {
     'comma-dangle': 'off',
     'vue/html-indent': 'off',
     'semi': 'off',
+    'no-console': 'off',
+
     'vue/html-closing-bracket-spacing': 'off',
     'vue/attributes-order': 'off',
     'vue/max-attributes-per-line': 'off',
     'vue/mustache-interpolation-spacing': 'off',
-    'no-console': 'off'
+    'vue/singleline-html-element-content-newline': 'off',
   },
 };

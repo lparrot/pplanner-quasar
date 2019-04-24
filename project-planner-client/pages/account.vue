@@ -1,13 +1,11 @@
 <template>
   <v-container>
-    Page d'accueil
+    Compte
   </v-container>
 </template>
 
 <script>
-
 export default {
-  name: 'HomePage',
-  auth: false,
+  name: 'AccountPage',
 };
 </script>

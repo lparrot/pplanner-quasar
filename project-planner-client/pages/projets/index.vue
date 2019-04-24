@@ -7,10 +7,10 @@
         </h3>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete :filter="search" :items="projets" box hint="Selectionnez un projet dans la liste ci-dessus" item-text="label" label="Projets" persistent-hint return-object v-model="projet">
+        <v-autocomplete :filter="searchProjet" :items="projets" @change="rechercherMembres" box dense hint="Selectionnez un projet dans la liste ci-dessus" item-text="nom" label="Projets" persistent-hint return-object v-model="selectedProjet">
           <template v-slot:item="{item}">
             <v-list-tile-content>
-              <v-list-tile-title>{{item.label}}</v-list-tile-title>
+              <v-list-tile-title>{{item.nom}}</v-list-tile-title>
               <v-list-tile-sub-title>{{item.description}}</v-list-tile-sub-title>
             </v-list-tile-content>
           </template>
@@ -18,7 +18,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card v-if="projet">
+    <v-card v-if="selectedProjet">
       <v-tabs centered dark icons-and-text>
         <v-tabs-slider color="yellow"/>
 
@@ -46,7 +46,18 @@
         </v-tab-item>
 
         <v-tab-item value="tab-3">
-          <v-container>Tab 3</v-container>
+          <v-container>
+            <v-autocomplete :filter="searchMembre" :items="membres" @click:append-outer="ajouterMembres" append-outer-icon="add_circle" box chips deletable-chips
+                            dense hide-no-data hide-selected item-text="nom" label="Membres" multiple return-object v-model="selectedMembres"
+            >
+              <template v-slot:item="{item}">
+                <v-list-tile-content>
+                  <v-list-tile-title>{{item.nom}}</v-list-tile-title>
+                </v-list-tile-content>
+              </template>
+            </v-autocomplete>
+            <MembreProjet :selected-projet="selectedProjet" @on-delete="supprimerMembre"/>
+          </v-container>
         </v-tab-item>
       </v-tabs>
     </v-card>
@@ -54,20 +65,41 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import MembreProjet from '../../components/MembreProjet';
 
-@Component()
-export default class ProjetIndexPage extends Vue {
-  projets = [
-    { id: 1, label: 'CCS', description: 'Carte de Circulation Sécurisée' },
-    { id: 1, label: 'VDD', description: 'Valise Diplomatique Défense' },
-    { id: 1, label: 'PRDV', description: 'Eureka - Module Prise de Rendez-Vous' },
-  ];
-  projet = null;
-
-  search(item, text) {
-    // Si la recherche contient le libellé ou la description
-    return item.label.toLowerCase().indexOf(text.toLowerCase()) > -1 || item.description.toLowerCase().indexOf(text.toLowerCase()) > -1;
-  }
-}
+export default {
+  name: 'ProjetsPage',
+  components: { MembreProjet },
+  data: () => ({
+    membres: [],
+    selectedMembres: null,
+    projets: [],
+    selectedProjet: null,
+  }),
+  async created() {
+    this.projets = await this.$axios.$get('/api/projets');
+  },
+  methods: {
+    searchProjet(item, text) {
+      // Si la recherche contient le libellé ou la description
+      return item.nom.toLowerCase().indexOf(text.toLowerCase()) > -1 || item.description.toLowerCase().indexOf(text.toLowerCase()) > -1;
+    },
+    searchMembre(item, text) {
+      // Si la recherche contient le libellé ou la description
+      return item.nom.toLowerCase().indexOf(text.toLowerCase()) > -1;
+    },
+    async rechercherMembres() {
+      this.membres = await this.$axios.$get(`/api/projets/membres/${this.selectedProjet.id}`);
+    },
+    async ajouterMembres() {
+      this.selectedProjet = await this.$axios.$put(`/api/projets/${this.selectedProjet.id}/membres`, this.selectedMembres.map(m => m.id));
+      this.selectedMembres = null;
+      await this.rechercherMembres();
+    },
+    async supprimerMembre(id) {
+      this.selectedProjet = await this.$axios.$delete(`/api/projets/${this.selectedProjet.id}/membres/${id}`);
+      await this.rechercherMembres();
+    },
+  },
+};
 </script>

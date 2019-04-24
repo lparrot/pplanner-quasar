@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  nuxt:
+    build: ./project-planner-client
+    container_name: project-planner-website
+    restart: always
+    ports:
+      - "3000:3000"
+    command:
+      "npm run start"
+
+  nginx:
+    image: nginx:1.13
+    container_name: project-planner-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    links:
+      - nuxt
+      - app
+
+  app:
+    container_name: project-planner-app
+    restart: always
+    build: ./project-planner-server
+    volumes:
+      - ./project-planner-server:/app
+    ports:
+      - "8080:8080"
