@@ -60,7 +60,29 @@
         </v-tab-item>
 
         <v-tab-item value="tab-2">
-          <v-container>Tab 2</v-container>
+          <v-container>
+            <v-layout row wrap>
+              <v-flex class="pa-3 mb-3 feature-pane" lg3 sm12>
+                <v-btn @click="$refs.calendar.prev()" absolute color="primary" fab left outline small>
+                  <v-icon dark>
+                    keyboard_arrow_left
+                  </v-icon>
+                </v-btn>
+                <v-btn @click="$refs.calendar.next()" absolute color="primary" fab outline right small>
+                  <v-icon dark>
+                    keyboard_arrow_right
+                  </v-icon>
+                </v-btn>
+                <br><br><br>
+                <v-select :items="calendar.types" label="Affichage" v-model="calendar.type"/>
+              </v-flex>
+              <v-flex class="pl-3" lg9 sm12>
+                <v-sheet height="500">
+                  <v-calendar :type="calendar.type" :weekdays="[1, 2, 3, 4, 5, 6, 0]" @click:day="onCalendarDayClick" color="primary" locale="fr" ref="calendar" v-model="calendar.start"/>
+                </v-sheet>
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-tab-item>
 
         <v-tab-item value="tab-3">
@@ -96,6 +118,15 @@ export default {
     projets: [],
     selectedProjet: null,
     modifierLogo: false,
+    calendar: {
+      start: null,
+      type: 'month',
+      types: [
+        { text: 'Jour', value: 'day' },
+        { text: 'Semaine', value: 'week' },
+        { text: 'Mois', value: 'month' },
+      ],
+    },
   }),
   async created() {
     this.projets = await this.$axios.$get('/api/projets');
@@ -127,6 +158,18 @@ export default {
       this.selectedProjet = await this.$axios.$put(`/api/projets/${this.selectedProjet.id}/logo`, data);
       this.modifierLogo = false;
     },
+    onCalendarDayClick(data) {
+      this.calendar.start = data.date;
+      this.calendar.type = 'day';
+    },
   },
 };
 </script>
+
+<style scoped>
+  .feature-pane {
+    position: relative;
+    padding-top: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+</style>
