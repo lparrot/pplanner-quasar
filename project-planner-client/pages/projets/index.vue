@@ -9,6 +9,9 @@
       <v-card-text>
         <v-autocomplete :filter="searchProjet" :items="projets" @change="rechercherMembres" box dense hint="Selectionnez un projet dans la liste ci-dessus" item-text="nom" label="Projets" persistent-hint return-object v-model="selectedProjet">
           <template v-slot:item="{item}">
+            <v-list-tile-avatar>
+              <v-img :src="'data:image/*;base64,' + item.logo" alt="Logo" v-if="item.logo != null"/>
+            </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>{{item.nom}}</v-list-tile-title>
               <v-list-tile-sub-title>{{item.description}}</v-list-tile-sub-title>
@@ -81,7 +84,7 @@
 
 <script>
 import MembreProjet from '../../components/MembreProjet';
-import FileUpload from './FileUpload';
+import FileUpload from '../../components/FileUpload';
 
 export default {
   name: 'ProjetsPage',
