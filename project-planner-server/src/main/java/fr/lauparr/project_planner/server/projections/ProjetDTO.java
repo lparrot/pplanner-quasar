@@ -10,6 +10,8 @@ public interface ProjetDTO {
 
   String getDescription();
 
+  MembreDTO getProprietaire();
+
   List<MembreDTO> getUtilisateurs();
 
 }

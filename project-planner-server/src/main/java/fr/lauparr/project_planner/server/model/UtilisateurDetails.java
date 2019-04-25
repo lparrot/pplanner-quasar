@@ -23,6 +23,7 @@ public class UtilisateurDetails implements Serializable {
   private String email;
   @JsonFormat(pattern = "dd/MM/yyyy")
   private LocalDate dateNaissance;
+  private String compagnie;
   private String fixe;
   private String portable;
 

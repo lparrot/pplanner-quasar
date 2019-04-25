@@ -32,7 +32,7 @@ public class ProjetController {
     return ResponseEntity.ok(projectionService.convertToDto(projetRepository.findAll(), ProjetDTO.class));
   }
 
-  @GetMapping("/membres/{id}")
+  @GetMapping("{id}/membres")
   public ResponseEntity getMembres(@PathVariable Long id) {
     Projet projet = projetRepository.findById(id).orElse(null);
 

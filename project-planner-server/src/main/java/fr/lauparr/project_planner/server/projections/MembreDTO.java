@@ -14,6 +14,9 @@ public interface MembreDTO {
   @Value("#{target.details?.email}")
   String getEmail();
 
+  @Value("#{target.details?.compagnie}")
+  String getCompagnie();
+
   @Value("#{target.details?.fixe}")
   String getFixe();
 

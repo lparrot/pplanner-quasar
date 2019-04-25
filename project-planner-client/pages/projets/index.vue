@@ -56,11 +56,26 @@
                 </v-list-tile-content>
               </template>
             </v-autocomplete>
-            <MembreProjet :selected-projet="selectedProjet" @on-delete="supprimerMembre"/>
+            <MembreProjet :selected-projet="selectedProjet" @on-delete="supprimerMembre" @on-show-informations="afficherInformations"/>
           </v-container>
         </v-tab-item>
       </v-tabs>
     </v-card>
+
+    <v-dialog v-model="modalInformations">
+      <v-card>
+        <v-card-title class="headline">Informations du membre</v-card-title>
+        <v-card-text>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat @click="modalInformations = false">
+            Fermer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -73,8 +88,10 @@ export default {
   data: () => ({
     membres: [],
     selectedMembres: null,
+    membreInformations: null,
     projets: [],
     selectedProjet: null,
+    modalInformations: false
   }),
   async created() {
     this.projets = await this.$axios.$get('/api/projets');
@@ -89,7 +106,7 @@ export default {
       return item.nom.toLowerCase().indexOf(text.toLowerCase()) > -1;
     },
     async rechercherMembres() {
-      this.membres = await this.$axios.$get(`/api/projets/membres/${this.selectedProjet.id}`);
+      this.membres = await this.$axios.$get(`/api/projets/${this.selectedProjet.id}/membres`);
     },
     async ajouterMembres() {
       this.selectedProjet = await this.$axios.$put(`/api/projets/${this.selectedProjet.id}/membres`, this.selectedMembres.map(m => m.id));
@@ -100,6 +117,10 @@ export default {
       this.selectedProjet = await this.$axios.$delete(`/api/projets/${this.selectedProjet.id}/membres/${id}`);
       await this.rechercherMembres();
     },
+    async afficherInformations(id) {
+      this.membreInformations = await this.$axios.$get(`/api/projets/membres/${id}`);
+      this.modalInformations = true;
+    }
   },
 };
 </script>
