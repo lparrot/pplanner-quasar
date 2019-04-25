@@ -21,24 +21,39 @@
     <v-card v-if="selectedProjet">
       <v-tabs centered dark icons-and-text>
         <v-tabs-slider color="yellow"/>
-
         <v-tab href="#tab-1">
           Informations
           <v-icon>info</v-icon>
         </v-tab>
-
         <v-tab href="#tab-2">
           Planning
           <v-icon>calendar_today</v-icon>
         </v-tab>
-
         <v-tab href="#tab-3">
           Equipe
           <v-icon>people</v-icon>
         </v-tab>
 
         <v-tab-item value="tab-1">
-          <v-container>Tab 1</v-container>
+          <v-container>
+            <v-list subheader two-line>
+              <v-list-tile>
+                <v-list-tile-action>
+                  <v-icon @click="modifierLogo = !modifierLogo" v-if="!modifierLogo">edit</v-icon>
+                  <v-icon @click="modifierLogo = !modifierLogo" v-else>close</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-avatar>
+                  <v-img :src="'data:image/*;base64,' + selectedProjet.logo" alt="Logo" v-if="selectedProjet.logo != null"/>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-sub-title>
+                    <span v-if="!modifierLogo && selectedProjet.logo == null">Pas de logo</span>
+                    <FileUpload @on-upload="uploadLogo" v-if="modifierLogo"/>
+                  </v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-container>
         </v-tab-item>
 
         <v-tab-item value="tab-2">
@@ -66,16 +81,18 @@
 
 <script>
 import MembreProjet from '../../components/MembreProjet';
+import FileUpload from './FileUpload';
 
 export default {
   name: 'ProjetsPage',
-  components: { MembreProjet },
+  components: { FileUpload, MembreProjet },
   data: () => ({
     membres: [],
     selectedMembres: null,
     membreInformations: null,
     projets: [],
     selectedProjet: null,
+    modifierLogo: false,
   }),
   async created() {
     this.projets = await this.$axios.$get('/api/projets');
@@ -100,6 +117,12 @@ export default {
     async supprimerMembre(id) {
       this.selectedProjet = await this.$axios.$delete(`/api/projets/${this.selectedProjet.id}/membres/${id}`);
       await this.rechercherMembres();
+    },
+    async uploadLogo(fichier) {
+      const data = new FormData();
+      data.append('file', fichier.file);
+      this.selectedProjet = await this.$axios.$put(`/api/projets/${this.selectedProjet.id}/logo`, data);
+      this.modifierLogo = false;
     },
   },
 };

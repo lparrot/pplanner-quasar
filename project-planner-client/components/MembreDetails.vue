@@ -30,7 +30,6 @@
             <v-card-title class="headline">Informations sur le membre {{membre.nom}}</v-card-title>
             <v-card-text>
               <v-list subheader two-line>
-
                 <v-list-tile>
                   <v-list-tile-action>
                     <v-icon color="indigo">account_box</v-icon>
@@ -90,7 +89,6 @@
                     <v-list-tile-sub-title>{{membre.portable}}</v-list-tile-sub-title>
                   </v-list-tile-content>
                 </v-list-tile>
-
               </v-list>
             </v-card-text>
             <v-card-actions>

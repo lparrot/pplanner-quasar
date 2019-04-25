@@ -26,6 +26,8 @@ public class Projet implements Serializable {
   @NotBlank
   private String nom;
   private String description;
+  @Lob
+  private byte[] logo;
   @NotNull
   @ManyToOne
   @JsonManagedReference

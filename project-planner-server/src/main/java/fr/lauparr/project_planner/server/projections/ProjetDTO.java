@@ -8,6 +8,8 @@ public interface ProjetDTO {
 
   String getNom();
 
+  byte[] getLogo();
+
   String getDescription();
 
   MembreDTO getProprietaire();

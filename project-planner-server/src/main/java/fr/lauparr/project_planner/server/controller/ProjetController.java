@@ -9,7 +9,9 @@ import fr.lauparr.project_planner.server.service.ProjectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -52,6 +54,20 @@ public class ProjetController {
     projet.getUtilisateurs().addAll(utilisateurRepository.findAllById(ids));
     projet = projetRepository.save(projet);
 
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
+  @PutMapping("{id}/logo")
+  public ResponseEntity putProjet(@RequestParam("file") MultipartFile file, @PathVariable Long id) throws IOException {
+    Projet projet = projetRepository.findById(id).orElse(null);
+
+    if (projet == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    projet.setLogo(file.getBytes());
+
+    projet = projetRepository.save(projet);
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
