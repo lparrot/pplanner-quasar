@@ -78,7 +78,7 @@
               </v-flex>
               <v-flex class="pl-3" lg9 sm12>
                 <v-sheet height="500">
-                  <v-calendar :type="calendar.type" :weekdays="[1, 2, 3, 4, 5, 6, 0]" @click:day="onCalendarDayClick" color="primary" locale="fr" ref="calendar" v-model="calendar.start"/>
+                  <v-calendar :type="calendar.type" :weekdays="[1, 2, 3, 4, 5, 6, 0]" @click:day="onCalendarDayClick" @click:time="onCalendarDayClick" color="primary" locale="fr" ref="calendar" v-model="calendar.start"/>
                 </v-sheet>
               </v-flex>
             </v-layout>
@@ -120,7 +120,7 @@ export default {
     modifierLogo: false,
     calendar: {
       start: null,
-      type: 'month',
+      type: null,
       types: [
         { text: 'Jour', value: 'day' },
         { text: 'Semaine', value: 'week' },
@@ -128,8 +128,18 @@ export default {
       ],
     },
   }),
+  watch: {
+    'calendar.type': {
+      handler: function (after) {
+        this.$router.replace({ query: { calendar_type: after } });
+      },
+    },
+  },
   async created() {
     this.projets = await this.$axios.$get('/api/projets');
+  },
+  mounted() {
+    this.calendar.type = this.$route.query.calendar_type || 'month';
   },
   methods: {
     searchProjet(item, text) {
@@ -152,14 +162,14 @@ export default {
       this.selectedProjet = await this.$axios.$delete(`/api/projets/${this.selectedProjet.id}/membres/${id}`);
       await this.rechercherMembres();
     },
-    async uploadLogo(fichier) {
+    async uploadLogo(event) {
       const data = new FormData();
-      data.append('file', fichier.file);
+      data.append('file', event.file);
       this.selectedProjet = await this.$axios.$put(`/api/projets/${this.selectedProjet.id}/logo`, data);
       this.modifierLogo = false;
     },
-    onCalendarDayClick(data) {
-      this.calendar.start = data.date;
+    onCalendarDayClick(event) {
+      this.calendar.start = event.date;
       this.calendar.type = 'day';
     },
   },
