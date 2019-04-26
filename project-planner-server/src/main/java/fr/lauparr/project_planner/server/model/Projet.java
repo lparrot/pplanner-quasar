@@ -36,10 +36,14 @@ public class Projet implements Serializable {
   @JsonManagedReference
   private List<Utilisateur> utilisateurs = new ArrayList<>();
 
-  public Projet(String nom, String description, Utilisateur proprietaire) {
+  public Projet(String nom, String description, @NotNull Utilisateur proprietaire) {
     this.nom = nom;
     this.description = description;
     this.proprietaire = proprietaire;
   }
 
+  public Projet(@NotBlank String nom, String description, byte[] logo, @NotNull Utilisateur proprietaire) {
+    this(nom, description, proprietaire);
+    this.logo = logo;
+  }
 }

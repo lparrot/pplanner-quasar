@@ -9,7 +9,7 @@
       <v-card-text>
         <v-autocomplete :filter="searchProjet" :items="projets" @change="rechercherMembres" box dense hint="Selectionnez un projet dans la liste ci-dessus" item-text="nom" label="Projets" persistent-hint return-object v-model="selectedProjet">
           <template v-slot:item="{item}">
-            <v-list-tile-avatar>
+            <v-list-tile-avatar tile>
               <v-img :src="'data:image/*;base64,' + item.logo" alt="Logo" v-if="item.logo != null"/>
             </v-list-tile-avatar>
             <v-list-tile-content>
@@ -39,23 +39,25 @@
 
         <v-tab-item value="tab-1">
           <v-container>
-            <v-list subheader two-line>
-              <v-list-tile>
-                <v-list-tile-action>
-                  <v-icon @click="modifierLogo = !modifierLogo" v-if="!modifierLogo">edit</v-icon>
-                  <v-icon @click="modifierLogo = !modifierLogo" v-else>close</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-avatar>
-                  <v-img :src="'data:image/*;base64,' + selectedProjet.logo" alt="Logo" v-if="selectedProjet.logo != null"/>
-                </v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title>
-                    <span v-if="!modifierLogo && selectedProjet.logo == null">Pas de logo</span>
-                    <FileUpload @on-upload="uploadLogo" v-if="modifierLogo"/>
-                  </v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+            <v-layout align-center justify-center>
+              <FileUpload @on-upload="uploadLogo">
+                <template slot-scope="{fireChooseFile}">
+                  <v-hover>
+                    <template slot-scope="{hover}">
+                      <v-avatar size="100" tile>
+                        <v-img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="pointer" contain v-if="selectedProjet.logo != null">
+                          <v-expand-transition>
+                            <div class="d-flex align-center justify-center transition-fast-in-fast-out logo--edit-background font-weight-black body-2 fill-height" v-if="hover">
+                              Modifier
+                            </div>
+                          </v-expand-transition>
+                        </v-img>
+                      </v-avatar>
+                    </template>
+                  </v-hover>
+                </template>
+              </FileUpload>
+            </v-layout>
           </v-container>
         </v-tab-item>
 

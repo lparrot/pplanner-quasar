@@ -1,6 +1,6 @@
 <template>
   <section class="file-upload">
-    <v-text-field :label="label" @click="pickFile" prepend-icon="attach_file" v-model="imageName"/>
+    <slot :fireChooseFile="fireChooseFile"/>
     <input :accept="accept" @change="onFileUpload" ref="fileupload" style="display: none" type="file">
   </section>
 </template>
@@ -13,10 +13,6 @@ export default {
       type: String,
       default: 'image/*',
     },
-    label: {
-      type: String,
-      default: 'Selectionnez un fichier',
-    },
   },
   data: () => ({
     title: 'Image Upload',
@@ -26,7 +22,7 @@ export default {
     imageFile: '',
   }),
   methods: {
-    pickFile() {
+    fireChooseFile() {
       this.$refs.fileupload.click();
     },
     onFileUpload(e) {
