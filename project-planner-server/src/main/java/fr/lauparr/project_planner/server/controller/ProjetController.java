@@ -6,6 +6,7 @@ import fr.lauparr.project_planner.server.projections.ProjetDTO;
 import fr.lauparr.project_planner.server.repository.ProjetRepository;
 import fr.lauparr.project_planner.server.repository.UtilisateurRepository;
 import fr.lauparr.project_planner.server.service.ProjectionService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,19 @@ public class ProjetController {
     }
 
     return ResponseEntity.ok(projectionService.convertToDto(utilisateurRepository.findAllMembre(projet.getId()), MembreDTO.class));
+  }
+
+  @PutMapping("{id}")
+  public ResponseEntity putProjet(@PathVariable Long id, @RequestBody PutProjetParam params) {
+    Projet projet = projetRepository.findById(id).orElse(null);
+    if (projet == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    projet.setNom(params.getNom());
+    projet.setDescription(params.getDescription());
+    projet = projetRepository.save(projet);
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
   @PutMapping("/{id}/membres")
@@ -88,6 +102,12 @@ public class ProjetController {
     projetRepository.save(projet);
 
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
+  @Data
+  static class PutProjetParam {
+    String nom;
+    String description;
   }
 
 }

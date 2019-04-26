@@ -22,7 +22,7 @@
     </v-card>
 
     <v-card v-if="selectedProjet">
-      <v-tabs centered dark icons-and-text>
+      <v-tabs centered dark grow icons-and-text>
         <v-tabs-slider color="yellow"/>
         <v-tab href="#tab-1">
           Informations
@@ -39,24 +39,39 @@
 
         <v-tab-item value="tab-1">
           <v-container>
-            <v-layout align-center justify-center>
-              <FileUpload @on-upload="uploadLogo">
-                <template slot-scope="{fireChooseFile}">
-                  <v-hover>
-                    <template slot-scope="{hover}">
-                      <v-avatar size="100" tile>
-                        <v-img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="pointer" contain v-if="selectedProjet.logo != null">
-                          <v-expand-transition>
-                            <div class="d-flex align-center justify-center transition-fast-in-fast-out logo--edit-background font-weight-black body-2 fill-height" v-if="hover">
-                              Modifier
-                            </div>
-                          </v-expand-transition>
-                        </v-img>
-                      </v-avatar>
-                    </template>
-                  </v-hover>
-                </template>
-              </FileUpload>
+            <v-layout justify-center>
+              <v-flex md6 xs12>
+                <v-card flat>
+                  <v-card-media>
+                    <FileUpload @on-upload="uploadLogo">
+                      <template slot-scope="{fireChooseFile}">
+                        <v-hover>
+                          <template slot-scope="{hover}">
+                            <v-img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="pointer" contain height="150" v-if="selectedProjet.logo != null">
+                              <v-expand-transition>
+                                <div class="d-flex align-center justify-center transition-fast-in-fast-out logo--edit-background font-weight-black body-2 fill-height" v-if="hover">
+                                  Modifier
+                                </div>
+                              </v-expand-transition>
+                            </v-img>
+                          </template>
+                        </v-hover>
+                      </template>
+                    </FileUpload>
+                  </v-card-media>
+                  <v-card-text>
+                    <v-form @submit.prevent="modifierInformationsProjet" data-vv-scope="projet">
+                      <v-text-field :error-messages="errors.collect('projet.nom')" box data-vv-as="nom" label="Nom" name="nom" v-model="selectedProjet.nom" v-validate="{required: true}"/>
+                      <v-textarea :error-messages="errors.collect('projet.description')" box data-vv-as="description" label="Description" name="description" v-model="selectedProjet.description"/>
+                    </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-layout justify-center>
+                      <v-btn block color="primary" type="submit">Modifier</v-btn>
+                    </v-layout>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
             </v-layout>
           </v-container>
         </v-tab-item>
@@ -151,6 +166,12 @@ export default {
     searchMembre(item, text) {
       // Si la recherche contient le libellé ou la description
       return item.nom.toLowerCase().indexOf(text.toLowerCase()) > -1;
+    },
+    async modifierInformationsProjet() {
+      const valid = await this.$validator.validateAll('projet');
+      if (valid) {
+        this.selectedProjet = await this.$axios.$put(`/api/projets/${this.selectedProjet.id}`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description });
+      }
     },
     async rechercherMembres() {
       this.membres = await this.$axios.$get(`/api/projets/${this.selectedProjet.id}/membres`);
