@@ -35,12 +35,16 @@
                 <v-text-field :error-messages="errors.collect('profil.portable')" box data-vv-as="portable" label="Téléphone portable" mask="## ## ## ## ##" name="portable" v-model="profil.portable"/>
               </v-flex>
               <v-flex md6 xs12>
-                <v-menu :close-on-content-click="false" :nudge-right="40" full-width lazy max-width="290px" min-width="290px" offset-y transition="scale-transition" v-model="picker.menu">
+                <v-dialog :return-value.sync="profil.dateNaissance" full-width lazy ref="pickerDateNaissance" v-model="picker" width="290px">
                   <template v-slot:activator="{on}">
                     <v-text-field :error-messages="errors.collect('profil.dateNaissance')" :value="computedDateNaissance" box data-vv-as="date de naissance" label="Date de naissance" name="dateNaissance" readonly v-on="on"/>
                   </template>
-                  <v-date-picker :max="new Date().toISOString().substr(0, 10)" locale="fr" min="1950-01-01" ref="dateNaissancePicker" v-model="profil.dateNaissance"/>
-                </v-menu>
+                  <v-date-picker :max="new Date().toISOString().substr(0, 10)" locale="fr" min="1950-01-01" ref="dateNaissancePicker" v-model="profil.dateNaissance">
+                    <v-spacer></v-spacer>
+                    <v-btn @click="picker = false" color="primary" flat>Annuler</v-btn>
+                    <v-btn @click="$refs.pickerDateNaissance.save(profil.dateNaissance)" color="primary" flat>OK</v-btn>
+                  </v-date-picker>
+                </v-dialog>
               </v-flex>
             </v-layout>
             <v-layout justify-center>
@@ -67,9 +71,7 @@ export default {
   data: () => ({
     tab: null,
     profil: null,
-    picker: {
-      menu: false,
-    },
+    picker: false,
   }),
   computed: {
     computedDateNaissance() {
@@ -85,7 +87,7 @@ export default {
         this.$router.replace({ query: { tab: after } });
       },
     },
-    'picker.menu': {
+    'picker': {
       handler: function (val) {
         val && setTimeout(() => (this.$refs.dateNaissancePicker.activePicker = 'YEAR'));
       },
