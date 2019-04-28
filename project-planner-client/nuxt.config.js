@@ -1,7 +1,7 @@
 import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin';
 import pkg from './package';
 
-const appName = 'PPlaner';
+const appName = 'PPlanner';
 
 export default {
   mode: 'spa',
@@ -53,6 +53,7 @@ export default {
     { src: '@/plugins/vuetify' },
     { src: '~/plugins/axios' },
     { src: '~/plugins/vee-validate' },
+    { src: '~/plugins/moment' },
   ],
 
   router: {

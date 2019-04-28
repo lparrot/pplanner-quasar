@@ -50,8 +50,10 @@
     <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" app dark fixed flat>
       <v-toolbar-title class="ml-0 pl-3" style="width: 300px">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"/>
-        <v-avatar size="36px" tile><img src="~/static/logo.png"></v-avatar>
-        <nuxt-link class="hidden-sm-and-down pointer" tag="span" to="/" v-text="title"/>
+        <nuxt-link class="hidden-sm-and-down pointer" tag="span" to="/">
+          <v-avatar size="36px" tile><img src="~/static/logo.png"></v-avatar>
+          {{ title }}
+        </nuxt-link>
       </v-toolbar-title>
       <v-text-field class="hidden-sm-and-down" flat hide-details label="Search" prepend-inner-icon="search" solo-inverted/>
       <v-spacer/>

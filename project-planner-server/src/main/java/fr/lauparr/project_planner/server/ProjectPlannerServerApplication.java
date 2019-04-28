@@ -37,7 +37,7 @@ public class ProjectPlannerServerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Utilisateur user1 = creerUtilisateur("lparrot", "Parrot", "Laurent", "kestounet@gmail.com", LocalDate.of(1983, 9, 3), "CDAD-R", "06 48 09 11 32", "06 48 09 11 32");
+        Utilisateur user1 = creerUtilisateur("lparrot", "Parrot", "Laurent", "kestounet@gmail.com", LocalDate.of(1983, 9, 5), "CDAD-R", "06 48 09 11 32", "06 48 09 11 32");
         Utilisateur user2 = creerUtilisateur("aparrot", "Parrot", "Anne", "patesdegeek@gmail.com", LocalDate.of(1982, 7, 13), "Maison Rambouillet", "01 23 45 67 89", "01 23 45 67 89");
         Utilisateur user3 = creerUtilisateur("ebauduin", "Bauduin", "Edith", "edith.bauduin@gmail.com", LocalDate.of(1960, 3, 17), "Maison Guesnain", "98 76 54 32 10", "98 76 54 32 10");
 
