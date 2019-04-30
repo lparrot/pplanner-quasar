@@ -1,5 +1,6 @@
 package fr.lauparr.project_planner.server.projections;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public interface UtilisateurDetailsDTO {
   @Value("#{target.details?.portable}")
   String getPortable();
 
+  @JsonFormat(pattern = "dd/MM/yyyy")
   @Value("#{target.details?.dateNaissance}")
   LocalDate getDateNaissance();
 }

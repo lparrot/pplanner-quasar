@@ -73,7 +73,7 @@ public class SecurityController {
     String compagnie;
     String fixe;
     String portable;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDate dateNaissance;
   }
 }

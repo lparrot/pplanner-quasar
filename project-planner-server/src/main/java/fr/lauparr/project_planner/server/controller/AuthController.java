@@ -37,7 +37,7 @@ public class AuthController {
     return ResponseEntity.ok(result);
   }
 
-  @RequestMapping("/user")
+  @GetMapping("/user")
   @ResponseBody
   public ResponseEntity user(HttpServletRequest request) {
     Map<String, Object> result = new HashMap<>();

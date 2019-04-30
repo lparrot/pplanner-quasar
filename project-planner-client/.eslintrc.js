@@ -1,30 +1,41 @@
 module.exports = {
   root: true,
-  env: {
-    browser: true,
-    node: true,
-  },
+
   parserOptions: {
     parser: 'babel-eslint',
-    ecmaFeatures: {
-      legacyDecorators: true,
-    },
+    sourceType: 'module',
   },
+
+  env: {
+    browser: true,
+  },
+
+  // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
+  // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
   extends: [
-    '@nuxtjs',
-    'plugin:nuxt/recommended',
+    'plugin:vue/essential',
   ],
+
+  // required to lint *.vue files
+  plugins: [
+    'vue',
+  ],
+
+  globals: {
+    'ga': true, // Google Analytics
+    'cordova': true,
+    '__statics': true,
+    'process': true,
+  },
+
   // add your custom rules here
   rules: {
-    'comma-dangle': 'off',
-    'vue/html-indent': 'off',
-    'semi': 'off',
-    'no-console': 'off',
+    'prefer-promise-reject-errors': 'off',
+    'vue/mustache-interpolation-spacing': 'warn',
 
-    'vue/html-closing-bracket-spacing': 'off',
-    'vue/attributes-order': 'off',
-    'vue/max-attributes-per-line': 'off',
-    'vue/mustache-interpolation-spacing': 'off',
-    'vue/singleline-html-element-content-newline': 'off',
+    // allow console.log during development only
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // allow debugger during development only
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
-};
+}

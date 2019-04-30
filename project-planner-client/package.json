@@ -1,45 +1,45 @@
 {
   "name": "project-planner",
-  "version": "1.0.0",
-  "description": "My legendary Nuxt.js project",
-  "author": "Laurent PARROT",
+  "version": "0.0.1",
+  "description": "Application de gestion de projet",
+  "productName": "Project Planner",
+  "cordovaId": "org.cordova.quasar.app",
+  "author": "Laurent PARROT <laurent.parrot78@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "precommit": "npm run lint"
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "build:pwa": "quasar build -m pwa",
+    "lint": "eslint --ext .js,.vue src",
+    "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@nuxtjs/auth": "^4.5.3",
-    "@nuxtjs/axios": "^5.3.6",
-    "@nuxtjs/proxy": "^1.3.3",
-    "cross-env": "^5.2.0",
+    "@quasar/extras": "^1.0.0",
+    "axios": "^0.18.0",
     "moment": "^2.24.0",
-    "nuxt": "^2.4.0",
-    "vee-validate": "^2.2.0",
-    "vuetify": "^1.5.5",
-    "vuetify-loader": "^1.2.1"
+    "quasar": "^1.0.0-beta.0",
+    "vee-validate": "^2.2.5"
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config": "^0.0.1",
+    "@quasar/app": "^1.0.0-beta.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.15.1",
-    "eslint-config-standard": ">=12.0.0",
-    "eslint-loader": "^2.1.2",
-    "eslint-plugin-import": ">=2.16.0",
-    "eslint-plugin-jest": ">=22.3.0",
-    "eslint-plugin-node": ">=8.0.1",
-    "eslint-plugin-nuxt": ">=0.4.2",
-    "eslint-plugin-promise": ">=4.0.1",
-    "eslint-plugin-standard": ">=4.0.0",
-    "eslint-plugin-vue": "^5.2.2",
-    "node-sass": "^4.11.0",
-    "nodemon": "^1.18.9",
+    "eslint": "^5.10.0",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "quasar-app-extension-ide-helper": "0.0.5",
     "sass-loader": "^7.1.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2"
+    "strip-ansi": "=3.0.1"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ],
+  "resolutions": {
+    "ajv": "6.8.1"
   }
 }
