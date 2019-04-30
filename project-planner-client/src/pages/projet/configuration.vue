@@ -1,93 +1,83 @@
 <template>
   <q-page padding>
     <ProjetPage>
-      <q-card class="q-mb-xs" flat>
+      <q-card flat v-if="selectedProjet">
         <q-card-section>
-          <div class="text-h6">Projets</div>
+          <q-tabs align="justify" class="text-white bg-primary" dense v-model="tab">
+            <q-tab icon="info" label="Informations" name="tab1" />
+            <q-tab icon="calendar_today" label="Planning" name="tab2" />
+            <q-tab icon="people" label="Equipe" name="tab3" />
+          </q-tabs>
+
+          <q-tab-panels animated transition-next="jump-up" transition-prev="jump-up" v-model="tab">
+            <q-tab-panel name="tab1">
+              <section class="text-center">
+                <FileUpload @on-upload="uploadLogo">
+                  <template v-slot="{fireChooseFile}">
+                    <img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="cursor-pointer" height="150" v-if="selectedProjet.logo != null" />
+                  </template>
+                </FileUpload>
+                <p>
+                  <section class="inline">
+                    <span class="text-h2">{{ selectedProjet.nom }}</span>
+                    <q-popup-edit @save="modifierProjet" buttons v-model="selectedProjet.nom">
+                      <q-input autofocus counter dense v-model="selectedProjet.nom" />
+                    </q-popup-edit>
+                  </section>
+                </p>
+                <p>
+                  <section class="inline">
+                    <span class="text-h4">{{ selectedProjet.description }}</span>
+                    <q-popup-edit @save="modifierProjet" buttons v-model="selectedProjet.description">
+                      <q-input autofocus counter dense v-model="selectedProjet.description" />
+                    </q-popup-edit>
+                  </section>
+                </p>
+              </section>
+            </q-tab-panel>
+
+            <q-tab-panel name="tab2">
+
+            </q-tab-panel>
+
+            <q-tab-panel name="tab3">
+              <q-select :options="membres" @filter="searchMembres" clearable filled hide-dropdown-icon multiple v-model="selectedMembres">
+                <template v-slot:after>
+                  <q-btn @click="ajouterMembres" dense flat icon="check" round />
+                </template>
+                <template v-slot:selected-item="scope">
+                  <q-chip :tabindex="scope.tabindex" @remove="scope.removeAtIndex(scope.index)" color="white" dense removable text-color="secondary">
+                    <q-avatar color="secondary" icon="people" text-color="white" />
+                    {{ scope.opt.value.nom }}
+                  </q-chip>
+                </template>
+                <template v-slot:option="scope">
+                  <q-item v-bind="scope.itemProps" v-if="!scope.selected" v-on="scope.itemEvents">
+                    <q-item-section>
+                      <q-item-label v-text="scope.opt.value.nom" />
+                      <q-item-label caption v-text="scope.opt.value.compagnie" />
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      Aucun membre
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+
+              <q-separator class="q-my-md" />
+
+              <div class="row">
+                <MembreDetail :membre="selectedProjet.proprietaire" @delete-membre="supprimerMembre" @show-informations="afficherInformations" class="col-xs-12 col-md-3" proprietaire />
+                <MembreDetail :key="i" :membre="membre" @delete-membre="supprimerMembre" @show-informations="afficherInformations" class="col-xs-12 col-md-3" v-for="(membre,i) in selectedProjet.utilisateurs" />
+              </div>
+            </q-tab-panel>
+          </q-tab-panels>
         </q-card-section>
       </q-card>
-
-      <template v-if="selectedProjet">
-        <q-separator />
-
-        <q-card flat>
-          <q-card-section>
-            <q-tabs align="justify" class="text-white bg-primary" dense v-model="tab">
-              <q-tab icon="info" label="Informations" name="tab1" />
-              <q-tab icon="calendar_today" label="Planning" name="tab2" />
-              <q-tab icon="people" label="Equipe" name="tab3" />
-            </q-tabs>
-
-            <q-tab-panels animated transition-next="jump-up" transition-prev="jump-up" v-model="tab">
-              <q-tab-panel name="tab1">
-                <section class="text-center">
-                  <FileUpload @on-upload="uploadLogo">
-                    <template v-slot="{fireChooseFile}">
-                      <img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="cursor-pointer" height="150" v-if="selectedProjet.logo != null" />
-                    </template>
-                  </FileUpload>
-                  <p>
-                    <section class="inline">
-                      <span class="text-h2">{{ selectedProjet.nom }}</span>
-                      <q-popup-edit @save="modifierProjet" buttons v-model="selectedProjet.nom">
-                        <q-input autofocus counter dense v-model="selectedProjet.nom" />
-                      </q-popup-edit>
-                    </section>
-                  </p>
-                  <p>
-                    <section class="inline">
-                      <span class="text-h4">{{ selectedProjet.description }}</span>
-                      <q-popup-edit @save="modifierProjet" buttons v-model="selectedProjet.description">
-                        <q-input autofocus counter dense v-model="selectedProjet.description" />
-                      </q-popup-edit>
-                    </section>
-                  </p>
-                </section>
-              </q-tab-panel>
-
-              <q-tab-panel name="tab2">
-
-              </q-tab-panel>
-
-              <q-tab-panel name="tab3">
-                <q-select :options="membres" @filter="searchMembres" clearable filled hide-dropdown-icon multiple v-model="selectedMembres">
-                  <template v-slot:after>
-                    <q-btn @click="ajouterMembres" dense flat icon="check" round />
-                  </template>
-                  <template v-slot:selected-item="scope">
-                    <q-chip :tabindex="scope.tabindex" @remove="scope.removeAtIndex(scope.index)" color="white" dense removable text-color="secondary">
-                      <q-avatar color="secondary" icon="people" text-color="white" />
-                      {{ scope.opt.value.nom }}
-                    </q-chip>
-                  </template>
-                  <template v-slot:option="scope">
-                    <q-item v-bind="scope.itemProps" v-if="!scope.selected" v-on="scope.itemEvents">
-                      <q-item-section>
-                        <q-item-label v-text="scope.opt.value.nom" />
-                        <q-item-label caption v-text="scope.opt.value.compagnie" />
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        Aucun membre
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
-
-                <q-separator class="q-my-md" />
-
-                <div class="row">
-                  <MembreDetail :membre="selectedProjet.proprietaire" @delete-membre="supprimerMembre" @show-informations="afficherInformations" class="col-xs-12 col-md-3" proprietaire />
-                  <MembreDetail :key="i" :membre="membre" @delete-membre="supprimerMembre" @show-informations="afficherInformations" class="col-xs-12 col-md-3" v-for="(membre,i) in selectedProjet.utilisateurs" />
-                </div>
-              </q-tab-panel>
-            </q-tab-panels>
-          </q-card-section>
-        </q-card>
-      </template>
 
       <q-dialog ref="dialogInformations">
         <template v-if="selectedMembre">
