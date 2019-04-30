@@ -12,7 +12,7 @@ export default async ({ app, router, Vue, store }) => {
     if (to.meta.auth && store.state.auth.user == null) {
       // On stocke le nom de la route pour la redirection et on redirige vers la page de login
       localStorage.setItem(config.auth.storage.redirect, to.name)
-      next({ name: 'login' })
+      next({ name: 'route_login' })
       return
     }
     next()
@@ -36,10 +36,7 @@ class AuthService {
 
   async disconnect () {
     await this.store.dispatch('auth/deconnexion')
-  }
-
-  isLoggedIn () {
-    return this.store.getters['auth/isLoggedIn']
+    this.user = null
   }
 
   async fetchUser () {

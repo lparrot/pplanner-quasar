@@ -35,6 +35,17 @@ public class ProjetController {
     return ResponseEntity.ok(projectionService.convertToDto(projetRepository.findAll(), ProjetDTO.class));
   }
 
+  @GetMapping("{id}")
+  public ResponseEntity getProjet(@PathVariable Long id) {
+    Projet projet = projetRepository.findById(id).orElse(null);
+
+    if (projet == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
   @GetMapping("{id}/membres")
   public ResponseEntity getMembres(@PathVariable Long id) {
     Projet projet = projetRepository.findById(id).orElse(null);

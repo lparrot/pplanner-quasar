@@ -1,0 +1,68 @@
+<template>
+  <q-select :clearable="clearable" :dark="dark" :options="projets" :value="$store.state.projet.selected" @filter="searchProjets" @input="selectProjet" emit-value filled label="Projet" option-label="nom">
+    <template v-slot:option="scope">
+      <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+        <q-item-section avatar>
+          <q-avatar size="36px" square>
+            <img :src="'data:image/*;base64,' + scope.opt.value.logo">
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label v-text="scope.opt.value.nom" />
+          <q-item-label caption v-text="scope.opt.value.description" />
+        </q-item-section>
+      </q-item>
+    </template>
+    <template v-slot:no-option>
+      <q-item>
+        <q-item-section class="text-grey">
+          Aucun projet
+        </q-item-section>
+      </q-item>
+    </template>
+  </q-select>
+</template>
+<script>
+export default {
+  name: 'ProjetSelect',
+  props: {
+    dark: {
+      type: Boolean,
+    },
+    clearable: {
+      type: Boolean,
+    },
+  },
+  data () {
+    return {
+      projets: null,
+    }
+  },
+  async created () {
+    if (localStorage.getItem('selected_projet') != null) {
+      try {
+        const res = await this.$axios.get(`/api/projets/${ localStorage.getItem('selected_projet') }`)
+        this.$store.dispatch('projet/update', res.data)
+      } catch (e) {}
+    }
+  },
+  methods: {
+    async searchProjets (val, update, abort) {
+      if (this.projets != null) {
+        update()
+        return null
+      }
+      const res = await this.$axios.get('/api/projets')
+      this.projets = res.data.map(data => {
+        return { value: data }
+      })
+      update()
+    },
+    selectProjet (event) {
+      localStorage.setItem('selected_projet', event.id)
+      this.$store.dispatch('projet/update', event)
+      this.$emit('input', event)
+    },
+  },
+}
+</script>
