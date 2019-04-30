@@ -162,8 +162,8 @@
 
 <script>
 import FileUpload from 'components/FileUpload'
-import MembreDetail from '../../components/MembreDetail'
-import ProjetPage from '../../components/ProjetPage'
+import MembreDetail from 'components/MembreDetail'
+import ProjetPage from 'components/ProjetPage'
 
 export default {
   name: 'projets',
