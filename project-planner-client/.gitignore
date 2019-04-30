@@ -19,5 +19,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 
+target
 node
 .quasar-ide-helper
