@@ -66,6 +66,7 @@ public class ProjetController {
 
     projet.setNom(params.getNom());
     projet.setDescription(params.getDescription());
+    projet.setTags(params.getTags());
     projet = projetRepository.save(projet);
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
@@ -119,6 +120,7 @@ public class ProjetController {
   static class PutProjetParam {
     String nom;
     String description;
+    List<String> tags;
   }
 
 }

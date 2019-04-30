@@ -12,27 +12,35 @@
           <q-tab-panels animated transition-next="jump-up" transition-prev="jump-up" v-model="tab">
             <q-tab-panel name="tab1">
               <section class="text-center">
-                <FileUpload @on-upload="uploadLogo">
-                  <template v-slot="{fireChooseFile}">
-                    <img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="cursor-pointer" height="150" v-if="selectedProjet.logo != null" />
-                  </template>
-                </FileUpload>
-                <p>
-                  <section class="inline">
-                    <span class="text-h2">{{ selectedProjet.nom }}</span>
-                    <q-popup-edit @save="modifierProjet" buttons v-model="selectedProjet.nom">
-                      <q-input autofocus counter dense v-model="selectedProjet.nom" />
-                    </q-popup-edit>
-                  </section>
-                </p>
-                <p>
-                  <section class="inline">
-                    <span class="text-h4">{{ selectedProjet.description }}</span>
-                    <q-popup-edit @save="modifierProjet" buttons v-model="selectedProjet.description">
-                      <q-input autofocus counter dense v-model="selectedProjet.description" />
-                    </q-popup-edit>
-                  </section>
-                </p>
+                <q-form @submit="modifierProjet">
+                  <FileUpload @on-upload="uploadLogo">
+                    <template v-slot="{fireChooseFile}">
+                      <img :src="'data:image/*;base64,' + selectedProjet.logo" @click="fireChooseFile" alt="Logo" class="cursor-pointer" height="150" v-if="selectedProjet.logo != null" />
+                    </template>
+                  </FileUpload>
+                  <p>
+                    <section class="inline">
+                      <span class="text-h2">{{ selectedProjet.nom }}</span>
+                      <q-popup-edit buttons v-model="selectedProjet.nom">
+                        <q-input autofocus counter dense v-model="selectedProjet.nom" />
+                      </q-popup-edit>
+                    </section>
+                  </p>
+                  <p>
+                    <section class="inline">
+                      <span class="text-h4">{{ selectedProjet.description }}</span>
+                      <q-popup-edit buttons v-model="selectedProjet.description">
+                        <q-input autofocus counter dense v-model="selectedProjet.description" />
+                      </q-popup-edit>
+                    </section>
+                  </p>
+                  <div class="row justify-center">
+                    <q-select class="col-xs-12 col-md-6" filled hide-dropdown-icon input-debounce="0" label="Tags" multiple new-value-mode="add-unique" use-chips use-input v-model="selectedProjet.tags" />
+                  </div>
+                  <div class="row justify-center q-mt-lg">
+                    <q-btn flat type="submit">Valider les modifications</q-btn>
+                  </div>
+                </q-form>
               </section>
             </q-tab-panel>
 
@@ -230,7 +238,7 @@ export default {
     },
 
     async modifierProjet () {
-      const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description })
+      const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description, tags: this.selectedProjet.tags })
       this.selectedProjet = res.data
       this.$q.notify('Les informations du projet ont bien été modifiées')
     },

@@ -14,6 +14,8 @@ public interface ProjetDTO {
 
   byte[] getLogo();
 
+  List<String> getTags();
+
   String getDescription();
 
   MembreDTO getProprietaire();

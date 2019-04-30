@@ -35,6 +35,8 @@ public class Projet implements Serializable {
   @ManyToMany
   @JsonManagedReference
   private List<Utilisateur> utilisateurs = new ArrayList<>();
+  @ElementCollection(targetClass = String.class)
+  private List<String> tags = new ArrayList<>();
 
   public Projet(String nom, String description, @NotNull Utilisateur proprietaire) {
     this.nom = nom;
