@@ -48,8 +48,9 @@ module.exports = function (ctx) {
     supportIE: true,
 
     build: {
+      distDir: 'target/dist',
       scopeHoisting: true,
-      // vueRouterMode: 'history',
+      vueRouterMode: 'history',
       // vueCompiler: true,
       // gzip: true,
       // analyze: true,

@@ -20,7 +20,7 @@
           <q-badge color="red" floating>0</q-badge>
           <q-icon name="notifications"></q-icon>
         </q-btn>
-        <q-btn class="q-mx-xs" dense flat round v-if="$auth.isLoggedIn()">
+        <q-btn class="q-mx-xs" dense flat round v-if="$auth.user">
           <q-icon name="face"></q-icon>
           <q-menu>
             <div class="row no-wrap q-pa-md">

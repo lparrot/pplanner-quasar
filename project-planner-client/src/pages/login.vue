@@ -9,8 +9,8 @@
           </div>
         </q-card-section>
         <q-card-section>
-          <q-input :error="errors.has('username')" :error-message="errors.first('username')" bottom-slots class="q-mb-md" data-vv-as="nom d'utilisateur" filled label="Nom d'utilisateur" name="username" v-model="formLogin.username" v-validate="{required: true}" />
-          <q-input :error="errors.has('password')" :error-message="errors.first('password')" :type="togglePasswordVisibility ? 'text' : 'password'" bottom-slots data-vv-as="mot de passe" filled label="Mot de passe" name="password" v-model="formLogin.password" v-validate="{required: true}">
+          <q-input :error="errors.has('username')" :error-message="errors.first('username')" bottom-slots class="q-ma-xs" data-vv-as="nom d'utilisateur" filled label="Nom d'utilisateur" name="username" v-model="formLogin.username" v-validate="{required: true}" />
+          <q-input :error="errors.has('password')" :error-message="errors.first('password')" :type="togglePasswordVisibility ? 'text' : 'password'" bottom-slots class="q-ma-xs" data-vv-as="mot de passe" filled label="Mot de passe" name="password" v-model="formLogin.password" v-validate="{required: true}">
             <template v-slot:append>
               <q-icon :name="togglePasswordVisibility ? 'visibility' : 'visibility_off'" @click="togglePasswordVisibility = !togglePasswordVisibility" class="cursor-pointer" />
             </template>
@@ -43,9 +43,9 @@ export default {
       const valid = await this.$validator.validateAll()
       if (valid) {
         const redirect = localStorage.getItem('redirect')
-        await this.$auth.connect(this.formLogin)
+        const user = await this.$auth.connect(this.formLogin)
         redirect ? this.$router.push({ name: redirect }) : this.$router.push({ name: 'accueil' })
-        this.$q.notify(`Vous êtes maintenant connecté en tant que ${ this.$auth.user.sub }`)
+        this.$q.notify(`Vous êtes maintenant connecté en tant que ${ user.sub }`)
       }
     },
   },

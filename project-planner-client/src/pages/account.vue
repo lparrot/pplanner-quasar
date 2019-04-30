@@ -12,26 +12,26 @@
           <q-card>
             <q-card-section>
               <div class="row">
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('nom')" :error-message="errors.first('nom')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="nom" filled label="Nom" name="nom" v-model="formProfil.nom" v-validate="{required: true}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('nom')" :error-message="errors.first('nom')" bottom-slots class="q-ma-xs" data-vv-as="nom" filled label="Nom" name="nom" v-model="formProfil.nom" v-validate="{required: true}" />
                 </div>
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('prenom')" :error-message="errors.first('prenom')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="prénom" filled label="Prénom" name="prenom" v-model="formProfil.prenom" v-validate="{required: true}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('prenom')" :error-message="errors.first('prenom')" bottom-slots class="q-ma-xs" data-vv-as="prénom" filled label="Prénom" name="prenom" v-model="formProfil.prenom" v-validate="{required: true}" />
                 </div>
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('email')" :error-message="errors.first('email')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="e-mail" filled label="E-mail" name="email" v-model="formProfil.email" v-validate="{required: true, email: true}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('email')" :error-message="errors.first('email')" bottom-slots class="q-ma-xs" data-vv-as="e-mail" filled label="E-mail" name="email" v-model="formProfil.email" v-validate="{required: true, email: true}" />
                 </div>
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('compagnie')" :error-message="errors.first('compagnie')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="compagnie" filled label="Compagnie" name="compagnie" v-model="formProfil.compagnie" v-validate="{required: true}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('compagnie')" :error-message="errors.first('compagnie')" bottom-slots class="q-ma-xs" data-vv-as="compagnie" filled label="Compagnie" name="compagnie" v-model="formProfil.compagnie" v-validate="{required: true}" />
                 </div>
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('fixe')" :error-message="errors.first('fixe')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="téléphone fixe" filled label="Téléphone fixe" mask="## ## ## ## ##" name="fixe" v-model="formProfil.fixe" v-validate="{required: true}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('fixe')" :error-message="errors.first('fixe')" bottom-slots class="q-ma-xs" data-vv-as="téléphone fixe" filled label="Téléphone fixe" mask="## ## ## ## ##" name="fixe" v-model="formProfil.fixe" v-validate="{required: true}" />
                 </div>
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('portable')" :error-message="errors.first('portable')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="téléphone portable" filled label="Téléphone portable" mask="## ## ## ## ##" name="portable" v-model="formProfil.portable" v-validate="{required: true}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('portable')" :error-message="errors.first('portable')" bottom-slots class="q-ma-xs" data-vv-as="téléphone portable" filled label="Téléphone portable" mask="## ## ## ## ##" name="portable" v-model="formProfil.portable" v-validate="{required: true}" />
                 </div>
-                <div class="col-xs12 col-md-6">
-                  <q-input :error="errors.has('dateNaissance')" :error-message="errors.first('dateNaissance')" bottom-slots class="q-pa-xs q-mb-lg" data-vv-as="date de naissance" filled label="Date de naissance" mask="##/##/####" name="dateNaissance" v-model="formProfil.dateNaissance" v-validate="{required: true, regex: /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/}" />
+                <div class="col-xs-12 col-md-6">
+                  <q-input :error="errors.has('dateNaissance')" :error-message="errors.first('dateNaissance')" bottom-slots class="q-ma-xs" data-vv-as="date de naissance" filled label="Date de naissance" mask="##/##/####" name="dateNaissance" v-model="formProfil.dateNaissance" v-validate="{required: true, regex: /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/}" />
                 </div>
               </div>
             </q-card-section>

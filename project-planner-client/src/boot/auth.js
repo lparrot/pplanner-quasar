@@ -31,6 +31,7 @@ class AuthService {
   async connect ({ username, password }) {
     await this.store.dispatch('auth/connexion', { username, password })
     await this.fetchUser()
+    return this.user
   }
 
   async disconnect () {
