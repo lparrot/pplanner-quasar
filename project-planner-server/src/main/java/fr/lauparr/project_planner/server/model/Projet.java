@@ -28,6 +28,11 @@ public class Projet implements Serializable {
   private String description;
   @Lob
   private byte[] logo;
+  @ElementCollection(targetClass = String.class)
+  private List<String> tags = new ArrayList<>();
+  @OneToMany
+  @JsonManagedReference
+  private List<GroupeTache> groupes = new ArrayList<>();
   @NotNull
   @ManyToOne
   @JsonManagedReference
@@ -35,8 +40,6 @@ public class Projet implements Serializable {
   @ManyToMany
   @JsonManagedReference
   private List<Utilisateur> utilisateurs = new ArrayList<>();
-  @ElementCollection(targetClass = String.class)
-  private List<String> tags = new ArrayList<>();
 
   public Projet(String nom, String description, @NotNull Utilisateur proprietaire) {
     this.nom = nom;
@@ -47,5 +50,10 @@ public class Projet implements Serializable {
   public Projet(@NotBlank String nom, String description, byte[] logo, @NotNull Utilisateur proprietaire) {
     this(nom, description, proprietaire);
     this.logo = logo;
+  }
+
+  public void addGroupe(GroupeTache groupeTache) {
+    groupeTache.setProjet(this);
+    this.groupes.add(groupeTache);
   }
 }

@@ -1,8 +1,10 @@
 package fr.lauparr.project_planner.server.controller;
 
+import fr.lauparr.project_planner.server.model.GroupeTache;
 import fr.lauparr.project_planner.server.model.Projet;
 import fr.lauparr.project_planner.server.projections.MembreDTO;
 import fr.lauparr.project_planner.server.projections.ProjetDTO;
+import fr.lauparr.project_planner.server.repository.GroupeTacheRepository;
 import fr.lauparr.project_planner.server.repository.ProjetRepository;
 import fr.lauparr.project_planner.server.repository.UtilisateurRepository;
 import fr.lauparr.project_planner.server.service.ProjectionService;
@@ -23,6 +25,8 @@ public class ProjetController {
   private ProjetRepository projetRepository;
   @Autowired
   private UtilisateurRepository utilisateurRepository;
+  @Autowired
+  private GroupeTacheRepository groupeTacheRepository;
   @Autowired
   private ProjectionService projectionService;
 
@@ -107,12 +111,47 @@ public class ProjetController {
 
     boolean removed = projet.getUtilisateurs().removeIf(u -> u.getId().equals(idMembre));
 
-    if (!removed) {
+    return checkIfRemoved(projet, removed);
+  }
+
+  @PostMapping("/{id}/groupes")
+  public ResponseEntity postGroupeTache(@RequestBody PostGroupeTacheParam params, @PathVariable Long id) {
+    Projet projet = projetRepository.findById(id).orElse(null);
+
+    if (projet == null) {
       return ResponseEntity.notFound().build();
     }
 
-    projetRepository.save(projet);
+    GroupeTache groupeTache = new GroupeTache();
+    groupeTache.setNom(params.getNom());
+    groupeTache = groupeTacheRepository.save(groupeTache);
 
+    projet.addGroupe(groupeTache);
+
+    projet = projetRepository.save(projet);
+
+
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
+  @DeleteMapping("/{idProjet}/groupes/{idGroupe}")
+  public ResponseEntity deleteGroupe(@PathVariable Long idProjet, @PathVariable Long idGroupe) {
+    Projet projet = projetRepository.findById(idProjet).orElse(null);
+
+    if (projet == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    boolean removed = projet.getGroupes().removeIf(g -> g.getId().equals(idGroupe));
+
+    return checkIfRemoved(projet, removed);
+  }
+
+  private ResponseEntity checkIfRemoved(Projet projet, boolean removed) {
+    if (!removed) {
+      return ResponseEntity.notFound().build();
+    }
+    projetRepository.save(projet);
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
@@ -121,6 +160,11 @@ public class ProjetController {
     String nom;
     String description;
     List<String> tags;
+  }
+
+  @Data
+  static class PostGroupeTacheParam {
+    String nom;
   }
 
 }

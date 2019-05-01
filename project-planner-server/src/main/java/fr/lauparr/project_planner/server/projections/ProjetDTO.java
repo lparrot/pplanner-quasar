@@ -1,5 +1,6 @@
 package fr.lauparr.project_planner.server.projections;
 
+import fr.lauparr.project_planner.server.model.GroupeTache;
 import fr.lauparr.project_planner.server.model.Projet;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -15,6 +16,8 @@ public interface ProjetDTO {
   byte[] getLogo();
 
   List<String> getTags();
+
+  List<GroupeTache> getGroupes();
 
   String getDescription();
 
