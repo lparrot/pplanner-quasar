@@ -32,7 +32,7 @@ public class Utilisateur implements UserDetails {
   private String password;
   @Embedded
   private UtilisateurDetails details;
-  @ManyToMany
+  @ManyToMany(mappedBy = "utilisateurs")
   @JsonManagedReference
   private List<Projet> projets = new ArrayList<>();
 

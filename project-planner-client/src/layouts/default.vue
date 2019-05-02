@@ -59,7 +59,7 @@
     </q-header>
 
     <q-drawer bordered content-class="bg-grey-2" v-model="leftDrawerOpen">
-      <q-list>
+      <q-list dense>
         <template v-for="(m,i) in menu">
           <q-item-label :key="i" header v-if="m.type === 'title'">{{ m.label }}</q-item-label>
           <q-item :key="i" :to="{name: m.to}" clickable tag="a" v-if="m.type === 'menu' && (m.renderIf == null || m.renderIf() == true)">

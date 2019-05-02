@@ -30,7 +30,7 @@ public class Projet implements Serializable {
   private byte[] logo;
   @ElementCollection(targetClass = String.class)
   private List<String> tags = new ArrayList<>();
-  @OneToMany
+  @OneToMany(mappedBy = "projet")
   @JsonManagedReference
   private List<GroupeTache> groupes = new ArrayList<>();
   @NotNull
@@ -38,6 +38,7 @@ public class Projet implements Serializable {
   @JsonManagedReference
   private Utilisateur proprietaire;
   @ManyToMany
+  @JoinTable
   @JsonManagedReference
   private List<Utilisateur> utilisateurs = new ArrayList<>();
 
