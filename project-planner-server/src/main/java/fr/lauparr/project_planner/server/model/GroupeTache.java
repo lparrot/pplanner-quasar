@@ -22,7 +22,7 @@ public class GroupeTache implements Serializable {
   @ManyToOne
   @JsonBackReference
   private Projet projet;
-  @OneToMany(mappedBy = "groupe")
+  @OneToMany(mappedBy = "groupe", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @JsonManagedReference
   private List<Tache> taches = new ArrayList<>();
 
