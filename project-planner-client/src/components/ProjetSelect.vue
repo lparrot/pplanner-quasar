@@ -1,5 +1,5 @@
 <template>
-  <q-select :clearable="clearable" :dark="dark" :options="projets" :value="$store.state.projet.selected" @filter="searchProjets" @input="selectProjet" emit-value filled label="Projet" option-label="nom">
+  <q-select :clearable="clearable" :dark="dark" :options="projets" :value="$store.state.projet.selected" @filter="searchProjets" @input="selectProjet" dense emit-value filled label="Projet" option-label="nom">
     <template v-slot:option="scope">
       <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
         <q-item-section avatar>

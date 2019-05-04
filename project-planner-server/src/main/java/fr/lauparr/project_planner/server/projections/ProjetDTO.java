@@ -1,7 +1,5 @@
 package fr.lauparr.project_planner.server.projections;
 
-import fr.lauparr.project_planner.server.model.GroupeTache;
-
 import java.util.List;
 
 public interface ProjetDTO {
@@ -12,7 +10,7 @@ public interface ProjetDTO {
 
   byte[] getLogo();
 
-  List<GroupeTache> getGroupes();
+  List<GroupeTacheDTO> getGroupes();
 
   String getDescription();
 

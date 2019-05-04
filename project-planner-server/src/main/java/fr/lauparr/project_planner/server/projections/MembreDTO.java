@@ -2,6 +2,9 @@ package fr.lauparr.project_planner.server.projections;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public interface MembreDTO {
 
   Long getId();
@@ -22,5 +25,9 @@ public interface MembreDTO {
 
   @Value("#{target.details?.portable}")
   String getPortable();
+
+  default String getInitiales() {
+    return Arrays.stream(getNom().split(" ")).map(data -> Character.toString(data.charAt(0))).collect(Collectors.joining());
+  }
 
 }

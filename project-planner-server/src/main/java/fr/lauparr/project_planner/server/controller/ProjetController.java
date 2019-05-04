@@ -4,6 +4,7 @@ import fr.lauparr.project_planner.server.exception.EntityNotFoundException;
 import fr.lauparr.project_planner.server.model.GroupeTache;
 import fr.lauparr.project_planner.server.model.Projet;
 import fr.lauparr.project_planner.server.model.Tache;
+import fr.lauparr.project_planner.server.model.Utilisateur;
 import fr.lauparr.project_planner.server.projections.MembreDTO;
 import fr.lauparr.project_planner.server.projections.ProjetDTO;
 import fr.lauparr.project_planner.server.repository.GroupeTacheRepository;
@@ -126,6 +127,22 @@ public class ProjetController {
   @DeleteMapping("/{idProjet}/taches/{idTache}")
   public ResponseEntity deleteTache(@PathVariable Long idProjet, @PathVariable Long idTache) {
     tacheRepository.deleteById(idTache);
+    Projet projet = findProjet(idProjet);
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
+  @PutMapping("/{idProjet}/taches/{idtache}/utilisateurs/{idUtilisateur}")
+  public ResponseEntity affecterUtilisateur(@PathVariable Long idProjet, @PathVariable Long idtache, @PathVariable Long idUtilisateur) {
+    Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(null);
+    if (utilisateur == null) {
+      throw new EntityNotFoundException();
+    }
+    Tache tache = tacheRepository.findById(idtache).orElse(null);
+    if (tache == null) {
+      throw new EntityNotFoundException();
+    }
+    tache.setUtilisateur(utilisateur);
+    tacheRepository.save(tache);
     Projet projet = findProjet(idProjet);
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }

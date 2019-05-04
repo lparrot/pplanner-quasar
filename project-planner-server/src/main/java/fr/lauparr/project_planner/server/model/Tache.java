@@ -21,5 +21,7 @@ public class Tache implements Serializable {
   private GroupeTache groupe;
   @ElementCollection(targetClass = String.class)
   private List<String> tags;
+  @ManyToOne
+  private Utilisateur utilisateur;
 
 }

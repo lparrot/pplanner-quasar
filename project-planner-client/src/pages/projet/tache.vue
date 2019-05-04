@@ -9,57 +9,7 @@
       </q-banner>
 
       <template v-if="selectedProjet != null">
-        <q-expansion-item :key="i" :label="groupe.nom" default-opened dense expand-icon-toggle expand-separator header-class="bg-indigo-2 text-indigo-8" switch-toggle-side v-for="(groupe,i) in selectedProjet.groupes">
-
-          <template v-slot:header>
-            <q-item-section>
-              <span class="text-bold">{{ groupe.nom }}</span>
-            </q-item-section>
-            <q-item-section avatar>
-              <q-btn @click="supprimerGroupe(groupe.id)" dense flat round>
-                <q-icon name="delete" />
-              </q-btn>
-            </q-item-section>
-          </template>
-
-          <q-card flat>
-            <q-card-section class="text-indigo-8">
-              <q-markup-table bordered dense flat v-if="groupe.taches.length" wrap-cells>
-                <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th>Affecté à</th>
-                  <th>Statut</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="j" v-for="(tache,j) in groupe.taches">
-                  <td class="text-indigo-8 text-center cell-button">
-                    <q-btn @click="supprimerTache(tache.id)" dense flat icon="delete" />
-                  </td>
-                  <td>
-                    <div class="text-bold">{{ tache.titre }}</div>
-                    <div class="text-indigo-3" v-if="$q.screen.gt.md">{{ tache.description }}</div>
-                  </td>
-                  <td class="cell-membre text-center">
-                    <q-btn flat icon round>
-                      <q-avatar color="blue-8" size="24px" text-color="white">
-                        PL
-                        <q-tooltip>
-                          Parrot Laurent
-                        </q-tooltip>
-                      </q-avatar>
-                    </q-btn>
-                  </td>
-                  <td class="cell-statut text-center bg-blue-6 text-white">A réaliser</td>
-                </tr>
-                </tbody>
-              </q-markup-table>
-              <div v-else>Il n'y a aucune tâche dans ce groupe</div>
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <GroupeTache />
       </template>
     </ProjetPage>
 
@@ -115,10 +65,11 @@
 <script>
 import ProjetPage from 'components/ProjetPage'
 import { LocalStorage } from 'quasar'
+import GroupeTache from '../../components/GroupeTache'
 
 export default {
   name: 'PageProjetTache',
-  components: { ProjetPage },
+  components: { GroupeTache, ProjetPage },
   data() {
     return {
       help: false,
@@ -163,24 +114,6 @@ export default {
         this.groupe = {}
       }
     },
-    async supprimerGroupe(id) {
-      await this.$q.dialog({
-        title: 'Confirmation',
-        message: 'Etes vous sûr de vouloir supprimer ce groupe ainsi que toutes les tâches associées (Cette action est irréversible) ?',
-        ok: {
-          color: 'negative',
-          label: 'Supprimer le groupe',
-        },
-        cancel: {
-          color: 'primary',
-        },
-        persistent: true,
-      }).onOk(async () => {
-        const res = await this.$axios.delete(`/api/projets/${ this.selectedProjet.id }/groupes/${ id }`)
-        this.selectedProjet = res.data
-        this.$q.notify('Le groupe a bien été supprimé')
-      })
-    },
     async ajouterTache() {
       const valid = await this.$validator.validateAll()
       if (valid) {
@@ -190,24 +123,6 @@ export default {
         this.$q.notify('Tâche ajoutée')
         this.$refs.dialogEditTache.hide()
       }
-    },
-    async supprimerTache(tacheId) {
-      await this.$q.dialog({
-        title: 'Confirmation',
-        message: 'Etes vous sûr de vouloir supprimer cette tâche ?',
-        ok: {
-          color: 'negative',
-          label: 'Supprimer la tâche',
-        },
-        cancel: {
-          color: 'primary',
-        },
-        persistent: true,
-      }).onOk(async () => {
-        const res = await this.$axios.delete(`/api/projets/${ this.selectedProjet.id }/taches/${ tacheId }`)
-        this.selectedProjet = res.data
-        this.$q.notify('Tâche supprimée')
-      })
     },
     showAddMenu() {
       const options = {
@@ -250,19 +165,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .cell-button {
-    width: 70px;
-  }
 
   .cell-tags {
     width: 200px;
   }
 
-  .cell-membre {
-    width: 100px;
-  }
-
-  .cell-statut {
-    width: 100px;
-  }
 </style>
