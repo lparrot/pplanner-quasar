@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,5 +19,7 @@ public class Tache implements Serializable {
   @ManyToOne
   @JsonBackReference
   private GroupeTache groupe;
+  @ElementCollection(targetClass = String.class)
+  private List<String> tags;
 
 }

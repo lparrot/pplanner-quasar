@@ -61,7 +61,6 @@ public class ProjetController {
     Projet projet = findProjet(id);
     projet.setNom(params.getNom());
     projet.setDescription(params.getDescription());
-    projet.setTags(params.getTags());
     projet = projetRepository.save(projet);
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
@@ -117,6 +116,7 @@ public class ProjetController {
     Tache tache = new Tache();
     tache.setTitre(params.getTitre());
     tache.setDescription(params.getDescription());
+    tache.setTags(params.getTags());
     tache = tacheRepository.save(tache);
     groupe.addTache(tache);
     groupeTacheRepository.save(groupe);
@@ -151,7 +151,6 @@ public class ProjetController {
   static class PutProjetParam {
     String nom;
     String description;
-    List<String> tags;
   }
 
   @Data
@@ -163,6 +162,7 @@ public class ProjetController {
   static class PostTacheParams {
     String titre;
     String description;
+    List<String> tags;
   }
 
 }

@@ -34,9 +34,6 @@
                       </q-popup-edit>
                     </section>
                   </p>
-                  <div class="row justify-center">
-                    <q-select class="col-xs-12 col-md-6" filled hide-dropdown-icon input-debounce="0" label="Tags" multiple new-value-mode="add-unique" use-chips use-input v-model="selectedProjet.tags" />
-                  </div>
                   <div class="row justify-center q-mt-lg">
                     <q-btn flat type="submit">Valider les modifications</q-btn>
                   </div>
@@ -238,7 +235,7 @@ export default {
     },
 
     async modifierProjet () {
-      const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description, tags: this.selectedProjet.tags })
+      const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description })
       this.selectedProjet = res.data
       this.$q.notify('Les informations du projet ont bien été modifiées')
     },

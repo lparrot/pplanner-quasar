@@ -12,8 +12,6 @@ public interface ProjetDTO {
 
   byte[] getLogo();
 
-  List<String> getTags();
-
   List<GroupeTache> getGroupes();
 
   String getDescription();

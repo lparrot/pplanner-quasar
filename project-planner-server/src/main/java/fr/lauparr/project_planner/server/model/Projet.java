@@ -28,8 +28,6 @@ public class Projet implements Serializable {
   private String description;
   @Lob
   private byte[] logo;
-  @ElementCollection(targetClass = String.class)
-  private List<String> tags = new ArrayList<>();
   @OneToMany(mappedBy = "projet", cascade = CascadeType.PERSIST, orphanRemoval = true)
   @JsonManagedReference
   private List<GroupeTache> groupes = new ArrayList<>();
