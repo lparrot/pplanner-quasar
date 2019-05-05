@@ -50,13 +50,14 @@
                   </template>
                   <q-popup-proxy>
                     <q-card flat>
-                      <q-card-section>
-                        <q-list dense>
-                          <q-item :key="m" @click="affecterUtilisateur(tache.id, membre.id)" clickable v-close-popup v-for="(membre,m) in allMembres" v-ripple>
-                            <q-item-section>{{ membre.nom }}</q-item-section>
-                          </q-item>
-                        </q-list>
-                      </q-card-section>
+                      <q-list dense>
+                        <q-item :key="m" @click="affecterUtilisateur(tache.id, membre.id)" clickable v-close-popup v-for="(membre,m) in allMembres" v-ripple>
+                          <q-item-section avatar>
+                            <q-avatar color="grey-4" size="24px">{{ membre.initiales }}</q-avatar>
+                          </q-item-section>
+                          <q-item-section :class="{'text-bold': membre.me}">{{ membre.nom }}</q-item-section>
+                        </q-item>
+                      </q-list>
                     </q-card>
                   </q-popup-proxy>
                 </q-btn>
@@ -80,8 +81,19 @@ export default {
   computed: {
     allMembres() {
       const membres = []
+      // Récupération du propriétaire et de tous les membres du projet
       membres.push(this.selectedProjet.proprietaire)
       this.selectedProjet.utilisateurs.forEach(data => membres.push(data))
+      // On cherche l'élément qui correspond à l'utilisateur courant, on modifie son nom en 'Vous',
+      // on le monte en haut de liste et on ajoute un boolean pour le retrouver facilement
+      membres.find((x, i) => {
+        if (x.username === this.$auth.user.sub) {
+          membres.splice(i, 1)
+          x.nom = 'Vous'
+          x.me = true
+          membres.unshift(x)
+        }
+      })
       return membres
     },
     selectedProjet: {
