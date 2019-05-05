@@ -1,9 +1,11 @@
 package fr.lauparr.project_planner.server;
 
 import fr.lauparr.project_planner.server.model.Projet;
+import fr.lauparr.project_planner.server.model.StatutTache;
 import fr.lauparr.project_planner.server.model.Utilisateur;
 import fr.lauparr.project_planner.server.model.UtilisateurDetails;
 import fr.lauparr.project_planner.server.repository.ProjetRepository;
+import fr.lauparr.project_planner.server.repository.StatutTacheRepository;
 import fr.lauparr.project_planner.server.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,15 +21,17 @@ import java.util.List;
 @SpringBootApplication
 public class ProjectPlannerServerApplication implements CommandLineRunner {
 
-  private final PasswordEncoder passwordEncoder;
-  private final ProjetRepository projetRepository;
-  private final UtilisateurRepository utilisateurRepository;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+  @Autowired
+  private ProjetRepository projetRepository;
+  @Autowired
+  private UtilisateurRepository utilisateurRepository;
+  @Autowired
+  private StatutTacheRepository statutTacheRepository;
 
   @Autowired
-  public ProjectPlannerServerApplication(ProjetRepository projetRepository, UtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder) {
-    this.projetRepository = projetRepository;
-    this.utilisateurRepository = utilisateurRepository;
-    this.passwordEncoder = passwordEncoder;
+  public ProjectPlannerServerApplication() {
   }
 
   public static void main(String[] args) {
@@ -37,6 +41,8 @@ public class ProjectPlannerServerApplication implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     if (utilisateurRepository.count() < 1) {
+      creerDonneesReference();
+
       Utilisateur user1 = creerUtilisateur("lparrot", "Parrot", "Laurent", "kestounet@gmail.com", LocalDate.of(1983, 9, 5), "CDAD-R", "06 48 09 11 32", "06 48 09 11 32");
       Utilisateur user2 = creerUtilisateur("aparrot", "Parrot", "Anne", "patesdegeek@gmail.com", LocalDate.of(1982, 7, 13), "Maison Rambouillet", "01 23 45 67 89", "01 23 45 67 89");
       Utilisateur user3 = creerUtilisateur("ebauduin", "Bauduin", "Edith", "edith.bauduin@gmail.com", LocalDate.of(1960, 3, 17), "Maison Guesnain", "98 76 54 32 10", "98 76 54 32 10");
@@ -53,6 +59,15 @@ public class ProjectPlannerServerApplication implements CommandLineRunner {
 
       projetRepository.saveAll(projets);
     }
+  }
+
+  private void creerDonneesReference() {
+    statutTacheRepository.save(new StatutTache("A réaliser", "Description inconnue", "grey-3", true));
+    statutTacheRepository.save(new StatutTache("En cours", "Description inconnue", "orange-2", false));
+    statutTacheRepository.save(new StatutTache("Réalisé", "Description inconnue", "blue-2", false));
+    statutTacheRepository.save(new StatutTache("Testé", "Description inconnue", "yellow-3", false));
+    statutTacheRepository.save(new StatutTache("Cloturé", "Description inconnue", "green-2", false));
+    statutTacheRepository.save(new StatutTache("Annulé", "Description inconnue", "red-2", false));
   }
 
   private Utilisateur creerUtilisateur(String username, String nom, String prenom, String email, LocalDate dateNaissance, String compagnie, String fixe, String portable) {

@@ -13,4 +13,6 @@ public interface TacheDTO {
   List<String> getTags();
 
   MembreDTO getUtilisateur();
+
+  StatutTacheDTO getStatut();
 }

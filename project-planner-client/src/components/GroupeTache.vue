@@ -62,7 +62,18 @@
                   </q-popup-proxy>
                 </q-btn>
               </td>
-              <td class="cell-statut text-center bg-blue-6 text-white">A réaliser</td>
+              <td :class="['cell-statut', 'text-center', 'cursor-pointer', 'bg-' + tache.statut.couleur]">
+                {{ tache.statut.nom }}
+                <q-popup-proxy>
+                  <q-card flat>
+                    <q-list dense>
+                      <q-item :class="['bg-' + statut.couleur, 'q-ma-xs', 'text-overline']" :key="s" @click="changeStatut(tache.id, statut.id)" clickable v-close-popup v-for="(statut,s) in $store.state.projet.statuts" v-ripple>
+                        {{ statut.nom }}
+                      </q-item>
+                    </q-list>
+                  </q-card>
+                </q-popup-proxy>
+              </td>
             </tr>
             </tbody>
           </q-markup-table>
@@ -146,6 +157,11 @@ export default {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/taches/${ tacheId }/utilisateurs/${ utilisateurId }`)
       this.selectedProjet = res.data
       Notify.create({ message: 'Utilisateur affecté à la tâche' })
+    },
+    async changeStatut(tacheId, statutId) {
+      const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/taches/${ tacheId }/statuts/${ statutId }`)
+      this.selectedProjet = res.data
+      Notify.create({ message: 'Statut modifié' })
     },
   },
 }

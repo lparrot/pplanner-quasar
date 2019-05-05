@@ -1,16 +1,11 @@
 package fr.lauparr.project_planner.server.controller;
 
 import fr.lauparr.project_planner.server.exception.EntityNotFoundException;
-import fr.lauparr.project_planner.server.model.GroupeTache;
-import fr.lauparr.project_planner.server.model.Projet;
-import fr.lauparr.project_planner.server.model.Tache;
-import fr.lauparr.project_planner.server.model.Utilisateur;
+import fr.lauparr.project_planner.server.model.*;
 import fr.lauparr.project_planner.server.projections.MembreDTO;
 import fr.lauparr.project_planner.server.projections.ProjetDTO;
-import fr.lauparr.project_planner.server.repository.GroupeTacheRepository;
-import fr.lauparr.project_planner.server.repository.ProjetRepository;
-import fr.lauparr.project_planner.server.repository.TacheRepository;
-import fr.lauparr.project_planner.server.repository.UtilisateurRepository;
+import fr.lauparr.project_planner.server.projections.StatutTacheDTO;
+import fr.lauparr.project_planner.server.repository.*;
 import fr.lauparr.project_planner.server.service.ProjectionService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +30,8 @@ public class ProjetController {
   private TacheRepository tacheRepository;
   @Autowired
   private ProjectionService projectionService;
+  @Autowired
+  private StatutTacheRepository statutTacheRepository;
 
   @Autowired
   public ProjetController() {
@@ -43,6 +40,11 @@ public class ProjetController {
   @GetMapping
   public ResponseEntity getProjets() {
     return ResponseEntity.ok(projectionService.convertToDto(projetRepository.findAll(), ProjetDTO.class));
+  }
+
+  @GetMapping("/statuts")
+  public ResponseEntity getStatuts() {
+    return ResponseEntity.ok(projectionService.convertToDto(statutTacheRepository.findAll(), StatutTacheDTO.class));
   }
 
   @GetMapping("{id}")
@@ -118,6 +120,7 @@ public class ProjetController {
     tache.setTitre(params.getTitre());
     tache.setDescription(params.getDescription());
     tache.setTags(params.getTags());
+    tache.setStatut(statutTacheRepository.findStatutTacheByInitialTrue());
     tache = tacheRepository.save(tache);
     groupe.addTache(tache);
     groupeTacheRepository.save(groupe);
@@ -131,20 +134,41 @@ public class ProjetController {
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
-  @PutMapping("/{idProjet}/taches/{idtache}/utilisateurs/{idUtilisateur}")
-  public ResponseEntity affecterUtilisateur(@PathVariable Long idProjet, @PathVariable Long idtache, @PathVariable Long idUtilisateur) {
+  @PutMapping("/{idProjet}/taches/{idTache}/utilisateurs/{idUtilisateur}")
+  public ResponseEntity affecterUtilisateur(@PathVariable Long idProjet, @PathVariable Long idTache, @PathVariable Long idUtilisateur) {
     Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(null);
-    if (utilisateur == null) {
+    updateTache(EnumUpdateTacheFactory.utilisateur, utilisateur, idTache);
+    Projet projet = findProjet(idProjet);
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
+  @PutMapping("/{idProjet}/taches/{idTache}/statuts/{idStatut}")
+  public ResponseEntity changerStatut(@PathVariable Long idProjet, @PathVariable Long idTache, @PathVariable Long idStatut) {
+    StatutTache statut = statutTacheRepository.findById(idStatut).orElse(null);
+    updateTache(EnumUpdateTacheFactory.statut, statut, idTache);
+    Projet projet = findProjet(idProjet);
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
+  private void updateTache(EnumUpdateTacheFactory enumeration, Object data, Long idTache) {
+    if (data == null) {
       throw new EntityNotFoundException();
     }
-    Tache tache = tacheRepository.findById(idtache).orElse(null);
+    Tache tache = tacheRepository.findById(idTache).orElse(null);
     if (tache == null) {
       throw new EntityNotFoundException();
     }
-    tache.setUtilisateur(utilisateur);
+    switch (enumeration) {
+      case statut:
+        tache.setStatut((StatutTache) data);
+        break;
+      case utilisateur:
+        tache.setUtilisateur((Utilisateur) data);
+        break;
+      default:
+        break;
+    }
     tacheRepository.save(tache);
-    Projet projet = findProjet(idProjet);
-    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
 
@@ -180,6 +204,10 @@ public class ProjetController {
     String titre;
     String description;
     List<String> tags;
+  }
+
+  private enum EnumUpdateTacheFactory {
+    statut, utilisateur
   }
 
 }

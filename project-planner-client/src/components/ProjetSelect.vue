@@ -58,7 +58,8 @@ export default {
       })
       update()
     },
-    selectProjet (event) {
+    async selectProjet(event) {
+      // Enregistrement du projet selectionné
       localStorage.setItem('selected_projet', event.id)
       this.$store.dispatch('projet/update', event)
       this.$emit('input', event)

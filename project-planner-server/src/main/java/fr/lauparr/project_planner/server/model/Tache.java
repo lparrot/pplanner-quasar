@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,12 +17,16 @@ public class Tache implements Serializable {
   private Long id;
   private String titre;
   private String description;
+  @NotNull
   @ManyToOne
-  @JsonBackReference
-  private GroupeTache groupe;
+  private StatutTache statut;
+  @ManyToOne
+  private Utilisateur utilisateur;
   @ElementCollection(targetClass = String.class)
   private List<String> tags;
   @ManyToOne
-  private Utilisateur utilisateur;
+  @JsonBackReference
+  private GroupeTache groupe;
+
 
 }
