@@ -17,6 +17,7 @@ public class Tache implements Serializable {
   private Long id;
   private String titre;
   private String description;
+  private Float estimation;
   @NotNull
   @ManyToOne
   private StatutTache statut;

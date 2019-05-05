@@ -10,6 +10,8 @@ public interface TacheDTO {
 
   String getDescription();
 
+  Float getEstimation();
+
   List<String> getTags();
 
   MembreDTO getUtilisateur();

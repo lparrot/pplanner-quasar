@@ -1,5 +1,5 @@
 // Configuration for your app
-
+const path = require('path')
 const appName = 'PPlanner'
 
 module.exports = function (ctx) {
@@ -65,6 +65,10 @@ module.exports = function (ctx) {
           loader: 'eslint-loader',
           exclude: /node_modules/,
         })
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias,
+          mixins: path.resolve(__dirname, './src/mixins'),
+        }
       },
       env: {
         APP_NAME: JSON.stringify(appName),
