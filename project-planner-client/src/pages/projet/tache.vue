@@ -62,7 +62,7 @@
       <PageProjetEstimation v-if="action === 'estimation'" />
     </q-dialog>
 
-    <q-page-sticky :offset="[18, 18]" position="bottom-right">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right" v-if="selectedProjet != null">
       <q-btn @click="showAddMenu" color="primary" fab icon="fas fa-bars" />
     </q-page-sticky>
   </q-page>
@@ -71,7 +71,7 @@
 <script>
 import ProjetPage from 'components/ProjetPage'
 import { LocalStorage } from 'quasar'
-import GroupeTache from '../../components/GroupeTache'
+import GroupeTache from 'components/GroupeTache'
 import projetMixin from 'mixins/projet'
 import PageProjetEstimation from './estimation'
 

@@ -16,7 +16,7 @@
         <div :class="{'bg-grey-2': i % 2 === 0}" :key="i" class="row q-pa-sm items-center" v-for="(tache, i) in taches">
           <div class="col-6 col-md-9">{{ tache.titre }}</div>
           <div class="col-2 col-md-1 text-center">
-            <q-avatar class="cursor-pointer" color="blue" size="24px" v-if="tache.utilisateur">
+            <q-avatar class="cursor-pointer" color="blue" size="24px" text-color="white" v-if="tache.utilisateur">
               {{ tache.utilisateur.initiales }}
               <q-tooltip>{{ tache.utilisateur.nom }}</q-tooltip>
             </q-avatar>
