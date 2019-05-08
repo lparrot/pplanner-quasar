@@ -13,13 +13,13 @@
       </template>
     </ProjetPage>
 
-    <q-dialog ref="dialogEditGroupe">
+    <q-dialog @show="$nextTick(() => $refs.inputGroupeNom.focus())" ref="dialogEditGroupe">
       <div style="max-width: 80vw; width: 800px" v-if="action === 'groupe'">
         <q-form>
           <q-card flat square>
             <q-card-section>
               <div class="row">
-                <q-input :error="errors.has('nom')" :error-message="errors.first('nom')" autofocus bottom-slots class="col q-ma-ws" data-vv-as="nom" dense filled label="Nom" name="nom" v-model="groupe.nom" v-validate="{ required: true }" />
+                <q-input :error="errors.has('nom')" :error-message="errors.first('nom')" bottom-slots class="col q-ma-ws" data-vv-as="nom" dense filled label="Nom" name="nom" ref="inputGroupeNom" v-model="groupe.nom" v-validate="{ required: true }" />
               </div>
             </q-card-section>
             <q-separator />
@@ -31,13 +31,13 @@
       </div>
     </q-dialog>
 
-    <q-dialog ref="dialogEditTache">
+    <q-dialog @show="$nextTick(() => $refs.selectTacheGroupe.focus())" ref="dialogEditTache">
       <div style="max-width: 80vw; width: 800px" v-if="action === 'tache'">
         <q-form>
           <q-card flat square>
             <q-card-section>
               <div class="row">
-                <q-select :error="errors.has('groupe')" :error-message="errors.first('groupe')" :options="groupeOptions" bottom-slots class="col q-ma-xs" data-vv-as="groupe" dense emit-value filled label="Groupe" map-options name="groupe" options-dense v-model="tache.groupe" v-validate="{ required: true }" />
+                <q-select :error="errors.has('groupe')" :error-message="errors.first('groupe')" :options="groupeOptions" bottom-slots class="col q-ma-xs" data-vv-as="groupe" dense emit-value filled label="Groupe" map-options name="groupe" options-dense ref="selectTacheGroupe" v-model="tache.groupe" v-validate="{ required: true }" />
               </div>
               <div class="row">
                 <q-input :error="errors.has('titre')" :error-message="errors.first('titre')" bottom-slots class="col q-ma-xs" data-vv-as="titre" dense filled label="Titre" name="titre" v-model="tache.titre" v-validate="{ required: true }" />
@@ -51,7 +51,7 @@
             </q-card-section>
             <q-separator />
             <q-card-actions class="row justify-center">
-              <q-btn @click="ajouterTache" class="col" flat icon="add">Créer la tâche</q-btn>
+              <q-btn @click="ajouterTache" class="col" flat icon="add" type="submit">Créer la tâche</q-btn>
             </q-card-actions>
           </q-card>
         </q-form>
