@@ -13,26 +13,13 @@
           <div>L'estimation est en nombre jour/homme et peut être un nombre à virgule.</div>
           <div>Exemple : 1, 5, 13, 0.5</div>
         </q-banner>
-        <div :class="{'bg-grey-2': i % 2 === 0}" :key="i" class="row q-pa-sm items-center" v-for="(tache, i) in taches">
-          <div class="col-6 col-md-9">{{ tache.titre }}</div>
-          <div class="col-2 col-md-1 text-center">
-            <q-avatar class="cursor-pointer" color="blue" size="24px" text-color="white" v-if="tache.utilisateur">
-              {{ tache.utilisateur.initiales }}
-              <q-tooltip>{{ tache.utilisateur.nom }}</q-tooltip>
-            </q-avatar>
-            <q-avatar class="cursor-pointer" color="grey-4" size="24px" v-else>
-              ?
-              <q-tooltip>Non attribué</q-tooltip>
-            </q-avatar>
-          </div>
-          <div class="col-4 col-md-2">
-            <q-input :error="errors.has('estimation' +i)" :name="'estimation' + i" data-vv-as="estimation" dense filled v-model="tache.estimation" v-validate="{regex: /^(-?)(0|([1-9][0-9]*))(\.[0-9]+)?$/}">
-              <template v-slot:prepend>
-                <q-icon name="fas fa-clock" />
-              </template>
-            </q-input>
-          </div>
-        </div>
+
+        <q-expansion-item default-opened dense expand-icon-toggle expand-separator header-class="bg-indigo-2 text-indigo-8" label="Non estimées" switch-toggle-side>
+          <TacheEstimation :taches="taches.nonEstimees" />
+        </q-expansion-item>
+        <q-expansion-item default-opened dense expand-icon-toggle expand-separator header-class="bg-indigo-2 text-indigo-8" label="Estimées" switch-toggle-side>
+          <TacheEstimation :taches="taches.estimees" />
+        </q-expansion-item>
       </q-page>
     </q-page-container>
 
@@ -48,25 +35,35 @@
 <script>
 import projetMixin from 'mixins/projet'
 import { extend, Notify } from 'quasar'
+import TacheEstimation from 'src/components/TacheEstimation'
 
 export default {
   name: 'PageProjetEstimation',
+  components: { TacheEstimation },
   data() {
     return {
-      taches: [],
+      taches: {},
     }
   },
   mixins: [projetMixin],
-  created() {
-    let allTaches = []
-    allTaches = allTaches.concat(...this.selectedProjet.groupes.map(g => g.taches))
-    this.taches = extend(true, allTaches, this.taches)
+  async created() {
+    await this.init()
   },
   methods: {
+    async init() {
+      this.taches = {
+        estimees: [],
+        nonEstimees: [],
+      }
+      const allTaches = [].concat(...this.selectedProjet.groupes.map(g => g.taches))
+      this.taches.estimees = extend(true, allTaches.filter(data => data.estimation != null), this.taches.estimees)
+      this.taches.nonEstimees = extend(true, allTaches.filter(data => data.estimation == null), this.taches.nonEstimees)
+    },
     async save() {
       const valid = await this.$validator.validateAll()
       if (valid) {
-        const taches = this.taches.map(data => {
+        const allTaches = [...this.taches.estimees, ...this.taches.nonEstimees]
+        const taches = allTaches.map(data => {
           return {
             id: data.id,
             estimation: parseFloat(data.estimation),
@@ -75,6 +72,7 @@ export default {
         const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/estimations`, taches)
         this.selectedProjet = res.data
         Notify.create({ message: 'Modifications effectuées' })
+        await this.init()
         this.$emit('after-save')
       }
     },
@@ -82,6 +80,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

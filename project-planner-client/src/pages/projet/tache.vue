@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <ProjetPage>
-      <q-banner class="text-white bg-info" inline-actions v-if="help">
+      <q-banner class="text-white bg-info q-mb-sm" inline-actions v-if="help">
         Cliquez sur le bouton de menu en bas à droite de la page pour créer un nouveau groupe ou une nouvelle tâche etc...
         <template v-slot:action>
           <q-btn @click="hideHelpBanner" color="white" flat label="Ne plus afficher" />
@@ -59,7 +59,7 @@
     </q-dialog>
 
     <q-dialog maximized persistent ref="dialogEstimationCharge">
-      <PageProjetEstimation @after-save="$refs.dialogEstimationCharge.hide()" v-if="action === 'estimation'" />
+      <PageProjetEstimation v-if="action === 'estimation'" />
     </q-dialog>
 
     <q-page-sticky :offset="[18, 18]" position="bottom-right" v-if="selectedProjet != null">
