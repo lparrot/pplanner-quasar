@@ -2,6 +2,7 @@ package fr.lauparr.project_planner.server.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Tache implements Serializable {
 
   @Id
@@ -29,5 +31,14 @@ public class Tache implements Serializable {
   @JsonBackReference
   private GroupeTache groupe;
 
+  public Tache(String titre, String description) {
+    this.titre = titre;
+    this.description = description;
+  }
 
+  public Tache(String titre, String description, @NotNull StatutTache statut) {
+    this.titre = titre;
+    this.description = description;
+    this.statut = statut;
+  }
 }
