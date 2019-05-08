@@ -59,7 +59,7 @@
     </q-dialog>
 
     <q-dialog maximized persistent ref="dialogEstimationCharge">
-      <PageProjetEstimation v-if="action === 'estimation'" />
+      <PageProjetEstimation @after-save="$refs.dialogEstimationCharge.hide()" v-if="action === 'estimation'" />
     </q-dialog>
 
     <q-page-sticky :offset="[18, 18]" position="bottom-right" v-if="selectedProjet != null">

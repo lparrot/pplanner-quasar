@@ -150,6 +150,19 @@ public class ProjetController {
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
+  @PutMapping("/{idProjet}/estimations")
+  public ResponseEntity putEstimations(@PathVariable Long idProjet, @RequestBody List<PutEstimationsParams> params) {
+    params.forEach(data -> {
+      Tache tache = tacheRepository.findById(data.getId()).orElse(null);
+      if (tache != null) {
+        tache.setEstimation(data.getEstimation());
+        tacheRepository.save(tache);
+      }
+    });
+    Projet projet = findProjet(idProjet);
+    return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
+  }
+
   private void updateTache(EnumUpdateTacheFactory enumeration, Object data, Long idTache) {
     if (data == null) {
       throw new EntityNotFoundException();
@@ -204,6 +217,12 @@ public class ProjetController {
     String titre;
     String description;
     List<String> tags;
+  }
+
+  @Data
+  static class PutEstimationsParams {
+    Long id;
+    Float estimation;
   }
 
   private enum EnumUpdateTacheFactory {

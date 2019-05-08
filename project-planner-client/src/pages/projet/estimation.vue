@@ -47,7 +47,7 @@
 
 <script>
 import projetMixin from 'mixins/projet'
-import { extend } from 'quasar'
+import { extend, Notify } from 'quasar'
 
 export default {
   name: 'PageProjetEstimation',
@@ -65,7 +65,18 @@ export default {
   methods: {
     async save() {
       const valid = await this.$validator.validateAll()
-      // TODO : a implémenter
+      if (valid) {
+        const taches = this.taches.map(data => {
+          return {
+            id: data.id,
+            estimation: parseFloat(data.estimation),
+          }
+        })
+        const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/estimations`, taches)
+        this.selectedProjet = res.data
+        Notify.create({ message: 'Modifications effectuées' })
+        this.$emit('after-save')
+      }
     },
   },
 }
