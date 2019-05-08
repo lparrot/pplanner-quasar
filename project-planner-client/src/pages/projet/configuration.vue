@@ -200,7 +200,6 @@ export default {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/membres`, this.selectedMembres.map(data => data.value.id))
       this.selectedProjet = res.data
       this.selectedMembres = null
-      this.$q.notify('Les membres ont bien été ajoutés')
     },
 
     async supprimerMembre (event) {
@@ -217,7 +216,6 @@ export default {
       }).onOk(async () => {
         const res = await this.$axios.delete(`/api/projets/${ this.selectedProjet.id }/membres/${ event.id }`)
         this.selectedProjet = res.data
-        this.$q.notify('Le membre a bien été supprimé')
       })
     },
 
@@ -231,13 +229,11 @@ export default {
       data.append('file', event.file)
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/logo`, data)
       this.selectedProjet = res.data
-      this.$q.notify('Le logo a bien été modifié')
     },
 
     async modifierProjet () {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description })
       this.selectedProjet = res.data
-      this.$q.notify('Les informations du projet ont bien été modifiées')
     },
   },
 }

@@ -69,8 +69,8 @@
 </template>
 
 <script>
-import ProjetSelect from '../components/ProjetSelect'
-import AppMenu from './AppMenu'
+import ProjetSelect from 'src/components/ProjetSelect'
+import AppMenu from 'src/components/AppMenu'
 
 export default {
   name: 'DefaultLayout',
@@ -91,7 +91,10 @@ export default {
       this.$router.push({ name: 'route_login' })
     },
     selectProjet (event) {
-      this.$router.push({ name: 'route_projet_configuration' })
+      const route = this.$route.matched.find(data => data.name === 'route_projet')
+      if (route == null) {
+        this.$router.push({ name: 'route_projet_configuration' })
+      }
     },
   },
 }

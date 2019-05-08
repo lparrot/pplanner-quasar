@@ -24,6 +24,7 @@ public class GroupeTache implements Serializable {
   @ManyToOne
   @JsonBackReference
   private Projet projet;
+  @OrderBy("titre")
   @OneToMany(mappedBy = "groupe", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
   @JsonManagedReference
   private List<Tache> taches = new ArrayList<>();

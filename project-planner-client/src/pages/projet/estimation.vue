@@ -34,7 +34,7 @@
 
 <script>
 import projetMixin from 'mixins/projet'
-import { extend, Notify } from 'quasar'
+import { extend } from 'quasar'
 import TacheEstimation from 'src/components/TacheEstimation'
 
 export default {
@@ -71,7 +71,6 @@ export default {
         })
         const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/estimations`, taches)
         this.selectedProjet = res.data
-        Notify.create({ message: 'Modifications effectuées' })
         await this.init()
         this.$emit('after-save')
       }

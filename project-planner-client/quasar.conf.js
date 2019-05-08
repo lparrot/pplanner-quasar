@@ -54,7 +54,7 @@ module.exports = function (ctx) {
       distDir: 'target/dist',
       scopeHoisting: true,
       vueRouterMode: 'history',
-      // vueCompiler: true,
+      vueCompiler: true,
       // gzip: true,
       // analyze: true,
       // extractCSS: false,

@@ -85,7 +85,6 @@
 </template>
 
 <script>
-import { Notify } from 'quasar'
 
 export default {
   name: 'GroupeTache',
@@ -132,7 +131,6 @@ export default {
       }).onOk(async () => {
         const res = await this.$axios.delete(`/api/projets/${ this.selectedProjet.id }/taches/${ tacheId }`)
         this.selectedProjet = res.data
-        this.$q.notify('Tâche supprimée')
       })
     },
     async supprimerGroupe(id) {
@@ -150,18 +148,15 @@ export default {
       }).onOk(async () => {
         const res = await this.$axios.delete(`/api/projets/${ this.selectedProjet.id }/groupes/${ id }`)
         this.selectedProjet = res.data
-        this.$q.notify('Le groupe a bien été supprimé')
       })
     },
     async affecterUtilisateur(tacheId, utilisateurId) {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/taches/${ tacheId }/utilisateurs/${ utilisateurId }`)
       this.selectedProjet = res.data
-      Notify.create({ message: 'Utilisateur affecté à la tâche' })
     },
     async changeStatut(tacheId, statutId) {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/taches/${ tacheId }/statuts/${ statutId }`)
       this.selectedProjet = res.data
-      Notify.create({ message: 'Statut modifié' })
     },
   },
 }

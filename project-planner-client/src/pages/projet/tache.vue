@@ -121,7 +121,6 @@ export default {
         const res = await this.$axios.post(`/api/projets/${ this.selectedProjet.id }/groupes/${ this.tache.groupe.id }`, this.tache)
         this.selectedProjet = res.data
         this.tache = {}
-        this.$q.notify('Tâche ajoutée')
         this.$refs.dialogEditTache.hide()
       }
     },
