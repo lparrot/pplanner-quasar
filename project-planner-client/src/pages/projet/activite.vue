@@ -13,6 +13,9 @@ import { bus } from '../../utils/bus'
 
 export default {
   name: 'PageProjetActivite',
+  meta: {
+    title: 'Activité',
+  },
   components: { ProjetPage },
   mixins: [projetMixin],
   data() {

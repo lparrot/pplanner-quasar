@@ -164,12 +164,15 @@ import ProjetPage from 'components/ProjetPage'
 
 export default {
   name: 'projets',
+  meta: {
+    title: 'Configuration',
+  },
   components: {
     ProjetPage,
     MembreDetail,
     FileUpload,
   },
-  data () {
+  data() {
     return {
       membres: null,
       selectedMembre: null,
@@ -179,16 +182,16 @@ export default {
   },
   computed: {
     selectedProjet: {
-      get () {
+      get() {
         return this.$store.state.projet.selected
       },
-      set (value) {
+      set(value) {
         this.$store.dispatch('projet/update', value)
       },
     },
   },
   methods: {
-    async searchMembres (val, update, abort) {
+    async searchMembres(val, update, abort) {
       const res = await this.$axios.get(`/api/projets/${ this.selectedProjet.id }/membres`)
       this.membres = res.data.map(data => {
         return { value: data }
@@ -196,13 +199,13 @@ export default {
       update()
     },
 
-    async ajouterMembres () {
+    async ajouterMembres() {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/membres`, this.selectedMembres.map(data => data.value.id))
       this.selectedProjet = res.data
       this.selectedMembres = null
     },
 
-    async supprimerMembre (event) {
+    async supprimerMembre(event) {
       await this.$q.dialog({
         title: 'Confirmation',
         message: 'Etes vous sûr de vouloir supprimer ce membre ?',
@@ -219,19 +222,19 @@ export default {
       })
     },
 
-    afficherInformations (event) {
+    afficherInformations(event) {
       this.selectedMembre = event
       this.$refs.dialogInformations.show()
     },
 
-    async uploadLogo (event) {
+    async uploadLogo(event) {
       const data = new FormData()
       data.append('file', event.file)
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }/logo`, data)
       this.selectedProjet = res.data
     },
 
-    async modifierProjet () {
+    async modifierProjet() {
       const res = await this.$axios.put(`/api/projets/${ this.selectedProjet.id }`, { nom: this.selectedProjet.nom, description: this.selectedProjet.description })
       this.selectedProjet = res.data
     },

@@ -54,7 +54,10 @@
 <script>
 export default {
   name: 'PageAccount',
-  data () {
+  meta: {
+    title: 'Compte',
+  },
+  data() {
     return {
       tab: 'tab1',
       formProfil: {
@@ -68,12 +71,12 @@ export default {
       },
     }
   },
-  async created () {
+  async created() {
     const params = { username: this.$auth.user.sub }
     const res = await this.$axios.get(`/api/security/account`, { params })
     this.formProfil = res.data
   },
-  mounted () {
+  mounted() {
     this.tab = this.$route.query.tab || 'tab1'
   },
   watch: {
@@ -84,7 +87,7 @@ export default {
     },
   },
   methods: {
-    async submit () {
+    async submit() {
       const valid = await this.$validator.validateAll()
       if (valid) {
         const res = await this.$axios.put(`/api/security/account/${ this.formProfil.id }`, this.formProfil)

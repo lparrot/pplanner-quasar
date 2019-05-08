@@ -29,7 +29,10 @@
 <script>
 export default {
   name: 'PageLogin',
-  data () {
+  meta: {
+    title: 'Connexion',
+  },
+  data() {
     return {
       formLogin: {
         username: null,
@@ -39,7 +42,7 @@ export default {
     }
   },
   methods: {
-    async submit () {
+    async submit() {
       const valid = await this.$validator.validateAll()
       if (valid) {
         const redirect = localStorage.getItem('redirect')

@@ -77,6 +77,9 @@ import PageProjetEstimation from './estimation'
 
 export default {
   name: 'PageProjetTache',
+  meta: {
+    title: 'Taches',
+  },
   mixins: [projetMixin],
   components: { PageProjetEstimation, GroupeTache, ProjetPage },
   data() {
