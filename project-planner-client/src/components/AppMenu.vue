@@ -24,6 +24,7 @@ export default {
         { type: 'title', label: 'Menu' },
         { type: 'menu', icon: 'event', label: 'Configuration', to: 'route_projet_configuration', renderIf: () => this.$auth.user != null },
         { type: 'menu', icon: 'playlist_add_check', label: 'Tâches', to: 'route_projet_tache', renderIf: () => this.$auth.user != null },
+        { type: 'menu', icon: 'fas fa-database', label: 'Activité', to: 'route_projet_activite', renderIf: () => this.$auth.user != null },
         { type: 'separator' },
         { type: 'title', label: 'Référentiels' },
         { type: 'menu', icon: 'face', label: 'Utilisateurs', to: 'route_referentiel_utilisateur', renderIf: () => this.$auth.user != null },

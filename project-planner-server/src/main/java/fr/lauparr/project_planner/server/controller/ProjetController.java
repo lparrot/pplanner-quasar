@@ -6,6 +6,7 @@ import fr.lauparr.project_planner.server.projections.MembreDTO;
 import fr.lauparr.project_planner.server.projections.ProjetDTO;
 import fr.lauparr.project_planner.server.projections.StatutTacheDTO;
 import fr.lauparr.project_planner.server.repository.*;
+import fr.lauparr.project_planner.server.service.LogService;
 import fr.lauparr.project_planner.server.service.ProjectionService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class ProjetController {
   private ProjectionService projectionService;
   @Autowired
   private StatutTacheRepository statutTacheRepository;
+  @Autowired
+  private LogService logService;
 
   @Autowired
   public ProjetController() {
@@ -137,16 +140,18 @@ public class ProjetController {
   @PutMapping("/{idProjet}/taches/{idTache}/utilisateurs/{idUtilisateur}")
   public ResponseEntity affecterUtilisateur(@PathVariable Long idProjet, @PathVariable Long idTache, @PathVariable Long idUtilisateur) {
     Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(null);
-    updateTache(EnumUpdateTacheFactory.utilisateur, utilisateur, idTache);
+    Tache tache = updateTache(EnumUpdateTacheFactory.utilisateur, utilisateur, idTache);
     Projet projet = findProjet(idProjet);
+    logService.creer(projet, "L'utilisateur %s a été affecté à la tache %s", utilisateur.getUsername(), tache.getTitre());
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
   @PutMapping("/{idProjet}/taches/{idTache}/statuts/{idStatut}")
   public ResponseEntity changerStatut(@PathVariable Long idProjet, @PathVariable Long idTache, @PathVariable Long idStatut) {
     StatutTache statut = statutTacheRepository.findById(idStatut).orElse(null);
-    updateTache(EnumUpdateTacheFactory.statut, statut, idTache);
+    Tache tache = updateTache(EnumUpdateTacheFactory.statut, statut, idTache);
     Projet projet = findProjet(idProjet);
+    logService.creer(projet, "Le statut de la tache %s a été modifié en %s", tache.getTitre(), tache.getStatut().getNom());
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
@@ -163,7 +168,7 @@ public class ProjetController {
     return ResponseEntity.ok(projectionService.convertToDto(projet, ProjetDTO.class));
   }
 
-  private void updateTache(EnumUpdateTacheFactory enumeration, Object data, Long idTache) {
+  private Tache updateTache(EnumUpdateTacheFactory enumeration, Object data, Long idTache) {
     if (data == null) {
       throw new EntityNotFoundException();
     }
@@ -181,7 +186,7 @@ public class ProjetController {
       default:
         break;
     }
-    tacheRepository.save(tache);
+    return tacheRepository.save(tache);
   }
 
 

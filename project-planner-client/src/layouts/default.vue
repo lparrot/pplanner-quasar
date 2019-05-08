@@ -14,7 +14,7 @@
           </q-btn>
         </q-toolbar-title>
         <div v-if="$auth.user && $q.screen.gt.xs">
-          <ProjetSelect @input="selectProjet" dark style="width: 200px" />
+          <ProjetSelect dark style="width: 200px" />
         </div>
         <q-btn class="q-mx-xs" dense flat round>
           <q-icon name="apps" />
@@ -71,30 +71,33 @@
 <script>
 import ProjetSelect from 'src/components/ProjetSelect'
 import AppMenu from 'src/components/AppMenu'
+import { bus } from '../utils/bus'
 
 export default {
   name: 'DefaultLayout',
   components: { AppMenu, ProjetSelect },
   computed: {
-    appName () {
+    appName() {
       return process.env.APP_NAME
     },
   },
-  data () {
+  data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop,
     }
   },
-  methods: {
-    async logout () {
-      await this.$auth.disconnect()
-      this.$router.push({ name: 'route_login' })
-    },
-    selectProjet (event) {
+  created() {
+    bus.$on('projet-select-updated', (event) => {
       const route = this.$route.matched.find(data => data.name === 'route_projet')
       if (route == null) {
         this.$router.push({ name: 'route_projet_configuration' })
       }
+    })
+  },
+  methods: {
+    async logout() {
+      await this.$auth.disconnect()
+      this.$router.push({ name: 'route_login' })
     },
   },
 }

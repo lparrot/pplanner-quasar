@@ -23,6 +23,8 @@
   </q-select>
 </template>
 <script>
+import { bus } from '../utils/bus'
+
 export default {
   name: 'ProjetSelect',
   props: {
@@ -33,21 +35,13 @@ export default {
       type: Boolean,
     },
   },
-  data () {
+  data() {
     return {
       projets: null,
     }
   },
-  async created () {
-    if (localStorage.getItem('selected_projet') != null) {
-      try {
-        const res = await this.$axios.get(`/api/projets/${ localStorage.getItem('selected_projet') }`)
-        this.$store.dispatch('projet/update', res.data)
-      } catch (e) {}
-    }
-  },
   methods: {
-    async searchProjets (val, update, abort) {
+    async searchProjets(val, update, abort) {
       if (this.projets != null) {
         update()
         return null
@@ -62,7 +56,7 @@ export default {
       // Enregistrement du projet selectionné
       localStorage.setItem('selected_projet', event.id)
       this.$store.dispatch('projet/update', event)
-      this.$emit('input', event)
+      bus.$emit('projet-select-updated', event)
     },
   },
 }
