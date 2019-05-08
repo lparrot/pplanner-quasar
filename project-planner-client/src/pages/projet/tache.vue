@@ -172,11 +172,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-
-  .cell-tags {
-    width: 200px;
-  }
-
-</style>
