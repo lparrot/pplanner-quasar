@@ -31,7 +31,15 @@
                   <q-input :error="errors.has('portable')" :error-message="errors.first('portable')" bottom-slots class="q-ma-xs" data-vv-as="téléphone portable" filled label="Téléphone portable" mask="## ## ## ## ##" name="portable" v-model="formProfil.portable" v-validate="{required: true}" />
                 </div>
                 <div class="col-xs-12 col-md-6">
-                  <q-input :error="errors.has('dateNaissance')" :error-message="errors.first('dateNaissance')" bottom-slots class="q-ma-xs" data-vv-as="date de naissance" filled label="Date de naissance" mask="##/##/####" name="dateNaissance" v-model="formProfil.dateNaissance" v-validate="{required: true, regex: /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/}" />
+                  <q-input :error="errors.has('dateNaissance')" :error-message="errors.first('dateNaissance')" bottom-slots class="q-ma-xs" data-vv-as="date de naissance" filled label="Date de naissance" mask="##/##/####" name="dateNaissance" v-model="formProfil.dateNaissance" v-validate="{required: true}">
+                    <template v-slot:append>
+                      <q-icon class="cursor-pointer" name="event">
+                        <q-popup-proxy ref="qDateProxy" transition-hide="scale" transition-show="scale">
+                          <q-date @input="() => $refs.qDateProxy.hide()" mask="DD/MM/YYYY" v-model="formProfil.dateNaissance" />
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
                 </div>
               </div>
             </q-card-section>
