@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <ProjetPage v-if="selectedProjet != null">
-      <q-table :columns="columns" :data="logs" row-key="id" title="Activité"></q-table>
+      <q-table :columns="columns" :data="logs" :pagination="pagination" row-key="id" title="Activité"></q-table>
     </ProjetPage>
   </q-page>
 </template>
@@ -21,6 +21,9 @@ export default {
   data() {
     return {
       logs: [],
+      pagination: {
+        rowsPerPage: 15,
+      },
       columns: [
         { name: 'message', field: 'message', align: 'left' },
         { name: 'utilisateur', field: 'utilisateur', align: 'center' },

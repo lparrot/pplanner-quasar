@@ -16,7 +16,7 @@
         </q-avatar>
       </div>
       <div class="col-4 col-md-2">
-        <q-input :error="errors.has('estimation' +i)" :name="'estimation' + i" data-vv-as="estimation" dense filled v-model="tache.estimation" v-validate="{regex: /^(-?)(0|([1-9][0-9]*))(\.[0-9]+)?$/}">
+        <q-input :error="errors.has('estimation' +i)" :name="'estimation' + i" @change="save" data-vv-as="estimation" dense filled hide-bottom-space v-model="tache.estimation" v-validate="{regex: /^(-?)(0|([1-9][0-9]*))(\.[0-9]+)?$/}">
           <template v-slot:prepend>
             <q-icon name="fas fa-clock" />
           </template>
@@ -29,7 +29,17 @@
 export default {
   name: 'TacheEstimation',
   props: {
-    taches: {},
+    taches: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
+  methods: {
+    save() {
+      this.$emit('on-save')
+    },
   },
 }
 </script>

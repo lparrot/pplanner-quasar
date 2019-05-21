@@ -54,7 +54,7 @@
         </q-btn>
       </q-toolbar>
       <q-toolbar v-if="$auth.user && $q.screen.lt.sm">
-        <ProjetSelect @input="selectProjet" class="full-width" dark />
+        <ProjetSelect class="full-width" dark />
       </q-toolbar>
     </q-header>
 

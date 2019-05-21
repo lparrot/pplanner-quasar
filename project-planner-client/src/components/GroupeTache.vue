@@ -1,86 +1,96 @@
 <template>
   <section>
-    <q-expansion-item :key="i" :label="groupe.nom" default-opened dense expand-icon-toggle expand-separator header-class="bg-indigo-2 text-indigo-8" switch-toggle-side v-for="(groupe,i) in selectedProjet.groupes">
+    <q-bar @click="clickAddGroupe" class="bg-primary text-white cursor-pointer text-caption q-mb-xs">
+      <span class="text-weight-light text-italic">Ajouter un groupe</span>
+    </q-bar>
+    <template v-for="(groupe,i) in selectedProjet.groupes">
+      <q-expansion-item :key="i" :label="groupe.nom" default-opened dense expand-icon-toggle expand-separator header-class="bg-indigo-2 text-indigo-8" switch-toggle-side>
 
-      <template v-slot:header>
-        <q-item-section>
-          <span class="text-bold">{{ groupe.nom }}</span>
-        </q-item-section>
-        <q-item-section avatar>
-          <q-btn @click="supprimerGroupe(groupe.id)" dense flat round size="sm">
-            <q-icon name="delete" />
-          </q-btn>
-        </q-item-section>
-      </template>
+        <template v-slot:header>
+          <q-item-section>
+            <span class="text-bold">{{ groupe.nom }}</span>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-btn @click="supprimerGroupe(groupe.id)" dense flat round size="sm">
+              <q-icon name="delete" />
+            </q-btn>
+          </q-item-section>
+        </template>
 
-      <q-card flat>
-        <q-card-section class="text-indigo-8">
-          <q-markup-table bordered dense flat v-if="groupe.taches.length" wrap-cells>
-            <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th>Affecté à</th>
-              <th>Statut</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr :key="j" v-for="(tache,j) in groupe.taches">
-              <td class="text-indigo-8 text-center cell-button">
-                <q-btn @click="supprimerTache(tache.id)" dense flat icon="delete" size="sm" />
-              </td>
-              <td>
-                <div class="text-bold">{{ tache.titre }}</div>
-                <div class="text-indigo-3" v-if="$q.screen.gt.md">{{ tache.description }}</div>
-              </td>
-              <td class="cell-membre text-center">
-                <q-btn flat icon round>
-                  <template v-if="tache.utilisateur">
-                    <q-avatar color="blue-8" size="24px" text-color="white">
-                      <span>{{ tache.utilisateur.initiales }}</span>
-                      <q-tooltip>
-                        Parrot Laurent
-                      </q-tooltip>
-                    </q-avatar>
-                  </template>
-                  <template v-else>
-                    <q-avatar color="grey-4" size="24px">
-                      <span>?</span>
-                    </q-avatar>
-                  </template>
+        <q-card flat>
+          <q-card-section class="text-indigo-8">
+            <q-markup-table bordered dense flat square v-if="groupe.taches.length" wrap-cells>
+              <thead>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>Affecté à</th>
+                <th>Statut</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr :key="j" v-for="(tache,j) in groupe.taches">
+                <td class="text-indigo-8 text-center cell-button">
+                  <q-btn @click="supprimerTache(tache.id)" dense flat icon="delete" size="sm" />
+                </td>
+                <td>
+                  <div class="text-bold">{{ tache.titre }}</div>
+                  <div class="text-indigo-3" v-if="$q.screen.gt.md">{{ tache.description }}</div>
+                </td>
+                <td class="cell-membre text-center">
+                  <q-btn flat icon round>
+                    <template v-if="tache.utilisateur">
+                      <q-avatar color="blue-8" size="24px" text-color="white">
+                        <span>{{ tache.utilisateur.initiales }}</span>
+                        <q-tooltip>
+                          Parrot Laurent
+                        </q-tooltip>
+                      </q-avatar>
+                    </template>
+                    <template v-else>
+                      <q-avatar color="grey-4" size="24px">
+                        <span>?</span>
+                      </q-avatar>
+                    </template>
+                    <q-popup-proxy>
+                      <q-card flat>
+                        <q-list dense>
+                          <q-item :key="m" @click="affecterUtilisateur(tache.id, membre.id)" clickable v-close-popup v-for="(membre,m) in allMembres" v-ripple>
+                            <q-item-section avatar>
+                              <q-avatar color="grey-4" size="24px">{{ membre.initiales }}</q-avatar>
+                            </q-item-section>
+                            <q-item-section :class="{'text-bold': membre.me}">{{ membre.nom }}</q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-card>
+                    </q-popup-proxy>
+                  </q-btn>
+                </td>
+                <td :class="['cell-statut', 'text-center', 'cursor-pointer', 'bg-' + tache.statut.couleur]">
+                  {{ tache.statut.nom }}
                   <q-popup-proxy>
                     <q-card flat>
                       <q-list dense>
-                        <q-item :key="m" @click="affecterUtilisateur(tache.id, membre.id)" clickable v-close-popup v-for="(membre,m) in allMembres" v-ripple>
-                          <q-item-section avatar>
-                            <q-avatar color="grey-4" size="24px">{{ membre.initiales }}</q-avatar>
-                          </q-item-section>
-                          <q-item-section :class="{'text-bold': membre.me}">{{ membre.nom }}</q-item-section>
+                        <q-item :class="['bg-' + statut.couleur, 'q-ma-xs', 'text-overline']" :key="s" @click="changeStatut(tache.id, statut.id)" clickable v-close-popup v-for="(statut,s) in $store.state.projet.statuts" v-ripple>
+                          {{ statut.nom }}
                         </q-item>
                       </q-list>
                     </q-card>
                   </q-popup-proxy>
-                </q-btn>
-              </td>
-              <td :class="['cell-statut', 'text-center', 'cursor-pointer', 'bg-' + tache.statut.couleur]">
-                {{ tache.statut.nom }}
-                <q-popup-proxy>
-                  <q-card flat>
-                    <q-list dense>
-                      <q-item :class="['bg-' + statut.couleur, 'q-ma-xs', 'text-overline']" :key="s" @click="changeStatut(tache.id, statut.id)" clickable v-close-popup v-for="(statut,s) in $store.state.projet.statuts" v-ripple>
-                        {{ statut.nom }}
-                      </q-item>
-                    </q-list>
-                  </q-card>
-                </q-popup-proxy>
-              </td>
-            </tr>
-            </tbody>
-          </q-markup-table>
-          <div v-else>Il n'y a aucune tâche dans ce groupe</div>
-        </q-card-section>
-      </q-card>
-    </q-expansion-item>
+                </td>
+              </tr>
+              </tbody>
+            </q-markup-table>
+
+            <div v-else>Il n'y a aucune tâche dans ce groupe</div>
+
+            <q-bar @click="clickAddTache(groupe)" class="bg-primary text-white cursor-pointer text-caption q-mb-xs">
+              <span class="text-weight-light text-italic">Ajouter une tache</span>
+            </q-bar>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
+    </template>
   </section>
 </template>
 
@@ -116,6 +126,12 @@ export default {
     },
   },
   methods: {
+    clickAddGroupe() {
+      this.$emit('on-add-groupe')
+    },
+    clickAddTache(groupe) {
+      this.$emit('on-add-tache', groupe)
+    },
     async supprimerTache(tacheId) {
       await this.$q.dialog({
         title: 'Confirmation',
