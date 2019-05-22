@@ -26,7 +26,7 @@ export default {
     return {
       menu: [
         { type: 'title', label: 'Projet', renderIf: () => this.user != null && this.selectedProjet != null },
-        { type: 'menu', icon: 'event', label: 'Configuration', to: 'route_projet_configuration', renderIf: () => this.user != null && this.selectedProjet != null },
+        { type: 'menu', icon: 'event', label: 'Informations', to: 'route_projet_information', renderIf: () => this.user != null && this.selectedProjet != null },
         { type: 'menu', icon: 'face', label: 'Membres', to: 'route_projet_membre', renderIf: () => this.user != null && this.selectedProjet != null },
         { type: 'menu', icon: 'playlist_add_check', label: 'Tâches', to: 'route_projet_tache', renderIf: () => this.user != null && this.selectedProjet != null },
         { type: 'menu', icon: 'fas fa-clock', label: 'Estimation de charges', to: 'route_projet_estimation', renderIf: () => this.user != null && this.selectedProjet != null },

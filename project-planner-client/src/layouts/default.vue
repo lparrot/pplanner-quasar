@@ -90,7 +90,7 @@ export default {
     bus.$on('projet-select-updated', (event) => {
       const route = this.$route.matched.find(data => data.name === 'route_projet')
       if (route == null) {
-        this.$router.push({ name: 'route_projet_configuration' })
+        this.$router.push({ name: 'route_projet_information' })
       }
     })
   },
