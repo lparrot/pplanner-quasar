@@ -9,6 +9,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,6 +29,8 @@ public class SecurityController {
   private UtilisateurRepository utilisateurRepository;
   @Autowired
   private ProjectionService projectionService;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
 
   @GetMapping("/user")
@@ -65,6 +68,19 @@ public class SecurityController {
     return ResponseEntity.ok(projectionService.convertToDto(utilisateur, UtilisateurDetailsDTO.class));
   }
 
+  @PutMapping("/account/{id}/password")
+  public ResponseEntity putAccountPassword(@RequestBody PutAccountPasswordParams params, @PathVariable Long id) {
+    Utilisateur utilisateur = utilisateurRepository.findById(id).orElse(null);
+    if (utilisateur == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    utilisateur.setPassword(passwordEncoder.encode(params.getPassword()));
+
+    utilisateurRepository.save(utilisateur);
+    return ResponseEntity.ok(true);
+  }
+
   @Data
   static class PutAccountParams {
     String nom;
@@ -75,5 +91,10 @@ public class SecurityController {
     String portable;
     @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDate dateNaissance;
+  }
+
+  @Data
+  static class PutAccountPasswordParams {
+    String password;
   }
 }
