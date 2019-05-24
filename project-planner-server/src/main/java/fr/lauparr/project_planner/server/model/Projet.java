@@ -1,5 +1,6 @@
 package fr.lauparr.project_planner.server.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,6 +40,9 @@ public class Projet implements Serializable {
   @JoinTable
   @JsonManagedReference
   private List<Utilisateur> utilisateurs = new ArrayList<>();
+  @OneToMany(mappedBy = "projet", orphanRemoval = true)
+  @JsonManagedReference
+  private List<ProjetFichier> fichiers = new ArrayList<>();
 
   public Projet(String nom, String description, @NotNull Utilisateur proprietaire) {
     this.nom = nom;
@@ -54,5 +58,10 @@ public class Projet implements Serializable {
   public void addGroupe(GroupeTache groupeTache) {
     groupeTache.setProjet(this);
     this.groupes.add(groupeTache);
+  }
+
+  public void addFichier(ProjetFichier fichier) {
+    fichier.setProjet(this);
+    this.fichiers.add(fichier);
   }
 }

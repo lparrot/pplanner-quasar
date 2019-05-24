@@ -1,5 +1,7 @@
 package fr.lauparr.project_planner.server.projections;
 
+import fr.lauparr.project_planner.server.model.ProjetFichier;
+
 import java.util.List;
 
 public interface ProjetDTO {
@@ -17,5 +19,7 @@ public interface ProjetDTO {
   MembreDTO getProprietaire();
 
   List<MembreDTO> getUtilisateurs();
+
+  List<ProjetFichier> getFichiers();
 
 }

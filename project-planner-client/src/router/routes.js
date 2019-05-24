@@ -17,6 +17,7 @@ const routes = [
           { name: 'route_projet_tache', path: 'tache', component: () => import('pages/projet/tache.vue'), meta: { auth: true } },
           { name: 'route_projet_activite', path: 'activite', component: () => import('pages/projet/activite.vue'), meta: { auth: true } },
           { name: 'route_projet_estimation', path: 'estimation', component: () => import('pages/projet/estimation.vue'), meta: { auth: true } },
+          { name: 'route_projet_fichier', path: 'fichier', component: () => import('pages/projet/fichier.vue'), meta: { auth: true } },
         ],
       },
       {
