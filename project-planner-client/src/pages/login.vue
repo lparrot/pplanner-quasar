@@ -46,9 +46,12 @@ export default {
       const valid = await this.$validator.validateAll()
       if (valid) {
         const redirect = localStorage.getItem('redirect')
-        const user = await this.$auth.connect(this.formLogin)
-        redirect ? this.$router.push({ name: redirect }) : this.$router.push({ name: 'route_accueil' })
-        this.$q.notify(`Vous êtes maintenant connecté en tant que ${ user.sub }`)
+        try {
+          const user = await this.$auth.connect(this.formLogin)
+          redirect ? this.$router.push({ name: redirect }) : this.$router.push({ name: 'route_accueil' })
+          this.$q.notify(`Vous êtes maintenant connecté en tant que ${ user.sub }`)
+        } catch (e) {
+        }
       }
     },
   },
