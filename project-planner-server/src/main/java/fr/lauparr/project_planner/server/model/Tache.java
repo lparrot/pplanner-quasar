@@ -30,11 +30,7 @@ public class Tache implements Serializable {
   @ManyToOne
   @JsonBackReference
   private GroupeTache groupe;
-
-  public Tache(String titre, String description) {
-    this.titre = titre;
-    this.description = description;
-  }
+  private int ordre;
 
   public Tache(String titre, String description, @NotNull StatutTache statut) {
     this.titre = titre;

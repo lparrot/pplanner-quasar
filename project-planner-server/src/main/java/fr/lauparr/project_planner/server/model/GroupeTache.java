@@ -21,10 +21,11 @@ public class GroupeTache implements Serializable {
   private Long id;
   @NotBlank
   private String nom;
+  private int ordre;
   @ManyToOne
   @JsonBackReference
   private Projet projet;
-  @OrderBy("titre")
+  @OrderBy("ordre")
   @OneToMany(mappedBy = "groupe", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
   @JsonManagedReference
   private List<Tache> taches = new ArrayList<>();

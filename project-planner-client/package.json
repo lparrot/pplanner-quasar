@@ -20,7 +20,8 @@
     "intro.js": "^2.9.3",
     "moment": "^2.24.0",
     "quasar": "^1.0.0-beta.24",
-    "vee-validate": "^2.2.5"
+    "vee-validate": "^2.2.5",
+    "vuedraggable": "^2.21.0"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0-beta.26",
