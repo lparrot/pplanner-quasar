@@ -36,8 +36,8 @@
               <q-separator class="q-mx-lg" inset vertical />
 
               <div class="column items-center">
-                <router-link :to="{name: 'route_account'}" v-close-popup>
-                  <q-avatar size="72px">
+                <router-link :to="{name: 'route_account'}">
+                  <q-avatar size="72px" v-close-popup>
                     <img src="http://i.pravatar.cc/64">
                   </q-avatar>
                 </router-link>
