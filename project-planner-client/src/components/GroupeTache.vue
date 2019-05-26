@@ -3,13 +3,16 @@
     <q-bar @click="clickAddGroupe" class="bg-primary text-white cursor-pointer text-caption q-mb-xs">
       <span class="text-weight-light text-italic">Ajouter un groupe</span>
     </q-bar>
-    <draggable v-model="selectedProjet.groupes" @end="updateGroupeOrder">
+    <draggable v-model="selectedProjet.groupes" @end="updateGroupeOrder" handle=".handle-group">
       <template v-for="(groupe,i) in selectedProjet.groupes">
         <q-expansion-item :key="i" :label="groupe.nom" default-opened dense expand-icon-toggle expand-separator header-class="bg-indigo-2 text-indigo-8" switch-toggle-side>
 
           <template v-slot:header>
             <q-item-section>
-              <span class="text-bold">{{ groupe.nom }}</span>
+              <div>
+                <q-icon style="cursor: move" name="fas fa-bars" class="handle-group q-mr-md"></q-icon>
+                <span class="text-bold">{{ groupe.nom }}</span>
+              </div>
             </q-item-section>
             <q-item-section avatar>
               <q-btn @click="supprimerGroupe(groupe.id)" dense flat round size="sm">
@@ -29,10 +32,13 @@
                   <th>Statut</th>
                 </tr>
                 </thead>
-                <draggable tag="tbody" v-model="groupe.taches" @end="updateTacheOrder(groupe)">
+                <draggable tag="tbody" v-model="groupe.taches" @end="updateTacheOrder(groupe)" handle=".handle-tache">
                   <tr :key="j" v-for="(tache,j) in groupe.taches">
                     <td class="text-indigo-8 text-center cell-button">
-                      <q-btn @click="supprimerTache(tache.id)" dense flat icon="delete" size="sm" />
+                      <div style="display: inline-block">
+                        <q-icon style="cursor: move" name="fas fa-bars" class="handle-tache q-mr-md"></q-icon>
+                        <q-btn @click="supprimerTache(tache.id)" dense flat icon="delete" size="sm" />
+                      </div>
                     </td>
                     <td>
                       <div class="text-bold">{{ tache.titre }}</div>
@@ -192,6 +198,7 @@ export default {
 <style lang="scss" scoped>
   .cell-button {
     width: 70px;
+    white-space: nowrap;
   }
 
   .cell-membre {
