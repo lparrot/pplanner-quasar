@@ -66,7 +66,12 @@ export default {
       this.$refs.uploader.reset()
     },
     async deleteFiles() {
-
+      await this.selected.forEach(async (data) => {
+        await this.$axios.delete(`/api/projets/fichiers/${data.id}`)
+        const index = this.selectedProjet.fichiers.findIndex(val => val.id === data.id)
+        this.selectedProjet.fichiers.splice(index, 1)
+      })
+      this.selected = []
     },
     async downloadFiles() {
       const res = await this.$axios({
@@ -78,14 +83,13 @@ export default {
         }),
       })
 
-      console.log(res)
-
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', res.headers['filename']); //or any other extension
       document.body.appendChild(link);
       link.click();
+      this.selected = []
     },
   },
 }

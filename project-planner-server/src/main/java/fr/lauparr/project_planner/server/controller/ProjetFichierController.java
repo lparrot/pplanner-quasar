@@ -106,6 +106,12 @@ public class ProjetFichierController {
       .body(binary);
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseEntity deleteFichier(@PathVariable Long id) {
+    projetFichierRepository.deleteById(id);
+    return ResponseEntity.ok().build();
+  }
+
   @Data
   private static class PostProjetFichierDownloadParams {
     private Long id;
