@@ -16,6 +16,20 @@
           <q-tooltip>Upload</q-tooltip>
         </q-btn>
       </template>
+
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td auto-width>
+            <q-checkbox dense v-model="props.selected" />
+          </q-td>
+          <q-td key="nom" :props="props">
+            <q-icon :name="'fa ' + getIcon(props.row.type)" class="q-mr-sm"/><span>{{ props.row.nom }}</span>
+          </q-td>
+          <q-td key="type" :props="props">
+            {{ props.row.type }}
+          </q-td>
+        </q-tr>
+      </template>
     </q-table>
 
     <q-dialog ref="modalUpload">
@@ -29,7 +43,7 @@
 
         <q-page-container>
           <q-page padding>
-            <q-uploader ref="uploader" flat batch multiple no-thumbnails @uploaded="uploaded" :url="'/api/projets/fichiers/' + selectedProjet.id" class="full-width" />
+            <q-uploader ref="uploader" flat batch multiple no-thumbnails @uploaded="uploaded" :url="'/api/projets/fichiers/' + selectedProjet.id" class="full-width" :max-file-size="1024000"/>
           </q-page>
         </q-page-container>
 
@@ -40,6 +54,28 @@
 
 <script>
 import projetMixin from 'src/mixins/projet'
+
+const mimes = {
+  'image': 'fa-file-image',
+  'audio': 'fa-file-audio',
+  'video': 'fa-file-video',
+  'application/pdf': 'fa-file-pdf',
+  'application/msword': 'fa-file-word',
+  'application/vnd.ms-word': 'fa-file-word',
+  'application/vnd.oasis.opendocument.text': 'fa-file-word',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml': 'fa-file-word',
+  'application/vnd.ms-excel': 'fa-file-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml': 'fa-file-excel',
+  'application/vnd.oasis.opendocument.spreadsheet': 'fa-file-excel',
+  'application/vnd.ms-powerpoint': 'fa-file-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml': 'fa-file-powerpoint',
+  'application/vnd.oasis.opendocument.presentation': 'fa-file-powerpoint',
+  'text/plain': 'fa-file-alt',
+  'text/html': 'fa-file-code',
+  'application/json': 'fa-file-code',
+  'application/gzip': 'fa-file-archive',
+  'application/zip': 'fa-file-archive',
+}
 
 export default {
   name: 'page-fichier',
@@ -58,6 +94,15 @@ export default {
     ],
   }),
   methods: {
+    getIcon(mime) {
+      const icon = Object.keys(mimes).find(data => {
+        return !!mime.startsWith(data);
+      })
+      if (icon != null) {
+        return mimes[icon]
+      }
+      return 'fa-file'
+    },
     getLabel(label) {
       return this.$q.screen.gt.sm ? label : null
     },
@@ -67,7 +112,7 @@ export default {
     },
     async deleteFiles() {
       await this.selected.forEach(async (data) => {
-        await this.$axios.delete(`/api/projets/fichiers/${data.id}`)
+        await this.$axios.delete(`/api/projets/fichiers/${ data.id }`)
         const index = this.selectedProjet.fichiers.findIndex(val => val.id === data.id)
         this.selectedProjet.fichiers.splice(index, 1)
       })
@@ -83,12 +128,12 @@ export default {
         }),
       })
 
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', res.headers['filename']); //or any other extension
-      document.body.appendChild(link);
-      link.click();
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', res.headers['filename']) //or any other extension
+      document.body.appendChild(link)
+      link.click()
       this.selected = []
     },
   },
