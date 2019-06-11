@@ -32,6 +32,7 @@ export default {
         { type: 'menu', icon: 'far fa-clock', label: 'Estimation de charges', to: 'route_projet_estimation', renderIf: () => this.user != null && this.selectedProjet != null },
         { type: 'menu', icon: 'far fa-list-alt', label: 'Activité', to: 'route_projet_activite', renderIf: () => this.user != null && this.selectedProjet != null },
         { type: 'menu', icon: 'far fa-folder-open', label: 'Fichiers', to: 'route_projet_fichier', renderIf: () => this.user != null && this.selectedProjet != null },
+        { type: 'menu', icon: 'far fa-calendar', label: 'Calendrier', to: 'route_projet_calendrier', renderIf: () => this.user != null && this.selectedProjet != null },
         { type: 'separator' },
         { type: 'title', label: 'Référentiels', renderIf: () => this.user != null },
         { type: 'menu', icon: 'face', label: 'Utilisateurs', to: 'route_referentiel_utilisateur', renderIf: () => this.user != null },

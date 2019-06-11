@@ -15,8 +15,14 @@
     "ide-helper": "quasar run ide-helper generate"
   },
   "dependencies": {
+    "@fullcalendar/core": "^4.2.0",
+    "@fullcalendar/daygrid": "^4.2.0",
+    "@fullcalendar/interaction": "^4.2.0",
+    "@fullcalendar/list": "^4.2.0",
+    "@fullcalendar/timegrid": "^4.2.0",
+    "@fullcalendar/vue": "^4.2.2",
     "@quasar/extras": "^1.1.2",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "intro.js": "^2.9.3",
     "moment": "^2.24.0",
     "quasar": "^1.0.0-beta.24",
