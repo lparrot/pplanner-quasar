@@ -1,6 +1,7 @@
 package fr.lauparr.project_planner.server;
 
 import fr.lauparr.project_planner.server.model.*;
+import fr.lauparr.project_planner.server.repository.CalendrierEventRepository;
 import fr.lauparr.project_planner.server.repository.ProjetRepository;
 import fr.lauparr.project_planner.server.repository.StatutTacheRepository;
 import fr.lauparr.project_planner.server.repository.UtilisateurRepository;
@@ -11,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -26,6 +29,9 @@ public class ProjectPlannerServerApplication implements CommandLineRunner {
   private UtilisateurRepository utilisateurRepository;
   @Autowired
   private StatutTacheRepository statutTacheRepository;
+  @Autowired
+  private CalendrierEventRepository calendrierEventRepository;
+
 
   @Autowired
   public ProjectPlannerServerApplication() {
@@ -55,7 +61,15 @@ public class ProjectPlannerServerApplication implements CommandLineRunner {
       );
 
       projetRepository.saveAll(projets);
+
+      projets.forEach(this::addEvents);
     }
+  }
+                              
+  private void addEvents(Projet projet) {
+    LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.NOON);
+    CalendrierEvent event = new CalendrierEvent("Event 1", "Description event 1", start, start.plusMinutes(30), projet);
+    calendrierEventRepository.save(event);
   }
 
   private void creerDonneesReference() {
